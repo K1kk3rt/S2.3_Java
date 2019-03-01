@@ -3,11 +3,25 @@ import java.util.Random;
 
 public class LifeModel {
 	
-	boolean[][] grid = new boolean[20][30];
-	Random random;
+	public boolean[][] grid;
+	private Random random;
 	
+	int gridRows;
+	int gridColumns; 
+	
+	private int getGridRows() {
+		return gridRows=20;
+	}
+
+	private int getGridColumns() {
+		return gridColumns=30;
+	}
+
+
 	//construct
 	public LifeModel() {
+		//create grid
+		 grid = new boolean[getGridRows()][getGridColumns()];
 		
 		//create random to fill grid
 		random = new Random();
@@ -21,7 +35,7 @@ public class LifeModel {
 		} 
 	}
 	
-	private Boolean IsAlive (int row, int column) {
+	public Boolean IsAlive (int row, int column) {
 		//prevent index out of bounds exception; when out of bounce return false -> when at edge of grid
 		try {
 			return grid [row][column];
@@ -121,7 +135,7 @@ public class LifeModel {
 	}
 	
 	public void nextGeneration() {
-		boolean[][] nextGenGrid = new boolean[20][30];
+		boolean[][] nextGenGrid = new boolean[getGridRows()][getGridColumns()];
 		
 		//determine isAlive boolean per cell, save in temporary new grid
 		for (int i = 0; i < nextGenGrid.length; i++) {

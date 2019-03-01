@@ -6,26 +6,17 @@ public class LifeApplication {
 
 	public static void main(String[] args) throws InterruptedException {
 		
-		LifeModel lifeModel = new LifeModel();
+		LifeModel model = new LifeModel();
+		LifeConsoleView view = new LifeConsoleView(model);
 		
 		Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             public void run() {
-            	lifeModel.show();
-    			lifeModel.nextGeneration();
-            }}, 0,50);
+            	view.refresh();
+            }}, 0,30);
 		
 		
-//		int i = 0;
-//		while(i<50) {
-//			lifeModel.show();
-//			lifeModel.nextGeneration();
-//			
-//			//wait 4 seconds
-//			TimeUnit.SECONDS.sleep(4);
-//			
-//			i++;
-//		}
+		
 
 	}
 
