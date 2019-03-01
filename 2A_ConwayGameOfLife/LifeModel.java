@@ -49,7 +49,6 @@ public class LifeModel implements IObservable{
 
 	@Override
 	public void notifyObservers() {
-		Object info = new Object();
 		for (IObserver item : observerList){
 			item.update(this);
 		}
