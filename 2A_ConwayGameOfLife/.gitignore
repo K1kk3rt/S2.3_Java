@@ -2,3 +2,6 @@
 /LifeApplication.class
 /LifeModel.class
 /LifeConsoleView.class
+/Observable.class
+/IObservable.class
+/IObserver.class

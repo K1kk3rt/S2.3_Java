@@ -1,22 +1,27 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 
-public class LifeModel {
+public class LifeModel implements IObservable{
 	
-	public boolean[][] grid;
+	//attributes
+	private boolean[][] grid;
 	private Random random;
+	private int gridRows=20;
+	private int gridColumns=30; 
+	private ArrayList<IObserver> observerList = new ArrayList<IObserver>();
 	
-	int gridRows;
-	int gridColumns; 
-	
+	//getters
 	private int getGridRows() {
-		return gridRows=20;
+		return gridRows;
 	}
 
 	private int getGridColumns() {
-		return gridColumns=30;
+		return gridColumns;
 	}
-
+	protected boolean[][] getGrid() {
+		return grid;
+	}
 
 	//construct
 	public LifeModel() {
@@ -35,6 +40,29 @@ public class LifeModel {
 		} 
 	}
 	
+	//implement interface
+	@Override
+	public void setChanged() {
+		nextGeneration();
+		
+	}
+
+	@Override
+	public void notifyObservers() {
+		Object info = new Object();
+		for (IObserver item : observerList){
+			item.update(this);
+		}
+		
+	}
+	
+	@Override
+	public void addObserver(LifeConsoleView view) {
+		observerList.add(view);
+	}
+	
+	//methods
+	
 	public Boolean IsAlive (int row, int column) {
 		//prevent index out of bounds exception; when out of bounce return false -> when at edge of grid
 		try {
@@ -42,30 +70,6 @@ public class LifeModel {
 		}
 		catch(Exception e){
 			return false;
-		}
-	}
-	
-	public void show() {
-		//generate numbers on top
-		System.out.printf("%-3s", "");
-		for (int i = 0; i < grid[0].length; i++) {
-			System.out.printf("%-3s", i);
-		}
-		System.out.println();
-		
-		//go trough array and replace true and false with @ and .
-		for (int i = 0; i < grid.length; i++) {
-			System.out.printf("%-3s", i); //numbers on the left side
-		    for (int j = 0; j < grid[0].length; j++) {
-		    	
-		    	if (IsAlive(i,j)) {
-		    		System.out.printf("%-3s", "@");
-		    	}
-		    	else {
-		    		System.out.printf("%-3s", ".");
-		    	}
-		    }
-		    System.out.println();
 		}
 	}
 	
@@ -87,23 +91,6 @@ public class LifeModel {
         }
         
         return aliveNeighbors; 
-	}
-	
-	
-	public void test() {
-		
-		Random random = new Random();
-		int i = 0;
-		
-		System.out.println();
-		
-		//print some neighbor counts to test
-		while (i < 5) {
-			int row = random.nextInt((20 - 0) + 1) + 0;
-			int column = random.nextInt((30 - 0) + 1) + 0;
-			System.out.println("row: " + row + ", column: " + column + ", neighbours: " + countNeighbors(row, column));
-			i++;
-		}
 	}
 	
 	private boolean evolueer(int row, int column) {
@@ -128,9 +115,6 @@ public class LifeModel {
 			}
 		}
 		
-		//convert boolean to integer
-		//int newCells = newCell ? 1 : 0;
-		
 		return newCell;
 	}
 	
@@ -147,6 +131,8 @@ public class LifeModel {
 		
 		//copy temporary new grid to old grid
 		grid = deepCopy(nextGenGrid);
+		
+		notifyObservers();
 	}
 	
 	private boolean[][] deepCopy(boolean[][] A) {
@@ -162,5 +148,5 @@ public class LifeModel {
 	      }
 	    }
 	    return B;
-	  }
+	  }	
 }
