@@ -10,10 +10,22 @@ public class LifeApplication {
 		
 		Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-	        public void run() {
-	        	lifeModel.show();
-	    		lifeModel.nextGeneration();
-	            }}, 0,50);
+            public void run() {
+            	lifeModel.show();
+    			lifeModel.nextGeneration();
+            }}, 0,50);
+		
+		
+//		int i = 0;
+//		while(i<50) {
+//			lifeModel.show();
+//			lifeModel.nextGeneration();
+//			
+//			//wait 4 seconds
+//			TimeUnit.SECONDS.sleep(4);
+//			
+//			i++;
+//		}
 
 	}
 
