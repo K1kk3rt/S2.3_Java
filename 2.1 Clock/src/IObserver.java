@@ -1,4 +1,4 @@
 
 public interface IObserver {
-	void update();
+	void update(int hours, int minutes);
 }

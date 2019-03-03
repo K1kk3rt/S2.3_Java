@@ -3,6 +3,8 @@ import java.awt.event.ActionListener;
 
 public class View implements IObserver, ActionListener{
 	IObservable model;
+	int hours;
+	int minutes;
 	
 	public View(IObservable model) {
 		this.model = model;
@@ -12,17 +14,19 @@ public class View implements IObserver, ActionListener{
 
 	//implement interface
 	@Override
-	public void update() {
-		actionPerformed(null);
+	public void update(int hours, int minutes) {
+		this.hours = hours;
+		this.minutes = minutes;
+		displayClock();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		displayClock();
+		model.nextMinute();
 		
 	}
 	
 	//methods
 	private void displayClock() {
-		System.out.println("clock");
+		System.out.println(hours + ":" + minutes);
 	}	
 }

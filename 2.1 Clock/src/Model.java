@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 
 public class Model implements IObservable{
-	int hours = 0;
-	int minutes = 0;
-	ArrayList<IObserver> observers;
+	public int hours = 0;
+	public int minutes = 0;
+	private ArrayList<IObserver> observers;
+	private boolean isChanged = false;
+	
 	
 	//construct
 	public Model() {
@@ -18,23 +20,29 @@ public class Model implements IObservable{
 	}
 	@Override
 	public void Notify() {
-		// TODO Auto-generated method stub
+		for (IObserver item : observers) {
+			item.update(hours, minutes);
+		}
 		
 	}
 
 	@Override
 	public void SetChanged() {
-		// TODO Auto-generated method stub
+		isChanged = true;
 		
 	}
 	
-	//methods
-	private void nextMinute() {
+	@Override
+	public void nextMinute() {
 		minutes++;
 		
 		if(minutes == 60) {
 			hours++;
 			minutes = 0;
 		}
+		
+		SetChanged();
+		
+		if (isChanged) {Notify();}
 	}
 }
