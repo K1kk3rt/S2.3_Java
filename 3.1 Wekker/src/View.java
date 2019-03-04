@@ -1,24 +1,40 @@
-import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-
 import javax.swing.*;
 
 public class View extends JFrame{
 
 	//construct
 	public View() {
-		JLabel lbl_time;
+			
+		createWindow();
 		
-		//create window
-		setBounds( 100, 100, 350, 350 );
-		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		setTitle( "alarm clock");
-		setVisible( true );
+		createContent();
+	}
+	
+	private void createWindow() {
 		
-		//add content
-		lbl_time = new JLabel("im time");
-		lbl_time.setPreferredSize(new Dimension(350, 100));
-		add(lbl_time, BorderLayout.CENTER);
+		this.setSize(400,400);
+		
+		//set location of window in middle of screen
+		Toolkit tk = Toolkit.getDefaultToolkit();	
+		Dimension dim = tk.getScreenSize();
+		int xPos = (dim.width / 2) - (this.getWidth() / 2);
+		int yPos = (dim.height / 2) - (this.getHeight() / 2);
+		setLocation(xPos, yPos);
+		
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Alarm clock");
+		
+		setVisible(true);
+	}
+	
+	private void createContent() {
+		
+		JPanel p = new JPanel();
+		JLabel lTitle = new JLabel("I'm A clock");
+		
+		p.add(lTitle);
 	}
 }
