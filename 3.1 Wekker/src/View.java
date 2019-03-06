@@ -3,8 +3,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
 import java.util.Observable;
+import java.util.Observer;
 
-public class View extends JFrame{
+public class View extends JFrame implements Observer {
+	
 	JPanel P;
 	JPanel PBottom;
 	
@@ -19,13 +21,18 @@ public class View extends JFrame{
 	
 	//construct
 	public View() {
-			
 		createWindow();
+	}
+	
+	//implement observer
+	@Override
+	public void update(Observable o, Object arg) {
+		LTimer.setText("updated time!");
 	}
 	
 	private void createWindow() {
 		
-		this.setSize(400,200);
+		setSize(400,200);
 		
 		//set location of window in middle of screen
 		Toolkit tk = Toolkit.getDefaultToolkit();	
@@ -59,7 +66,7 @@ public class View extends JFrame{
 		//content for middle
 		BPlus = new JButton("+");
 		BMinus = new JButton("-");
-		BPlus.addActionListener(new Model());
+		BPlus.addActionListener(new ListenerForButton(this));
 		
 		LTimer = new JLabel("I'm the timer!");
 		LTimer.setHorizontalAlignment(SwingConstants.CENTER);
