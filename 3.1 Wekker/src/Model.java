@@ -19,4 +19,9 @@ public class Model extends Observable{
 		notifyObservers();
 		
 	}
+	
+	public void setTimeToZero() {
+		hours = 0;
+		minutes = 0;
+	}
 }
