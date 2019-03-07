@@ -1,11 +1,11 @@
 import java.awt.Toolkit;
+import java.util.Observable;
+import java.util.Observer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
-import java.util.Observable;
-import java.util.Observer;
 
-public class View extends JFrame implements Observer {
+public class View extends JFrame implements Observer{
 	
 	JPanel P;
 	JPanel PBottom;
@@ -18,18 +18,23 @@ public class View extends JFrame implements Observer {
 	JButton BStart;
 	JButton BStop;
 	
+	EventController eventController;
+	Model model;
+	
 	
 	//construct
-	public View() {
+	public View(Model model) {
+		this.model = model;
 		createWindow();
 	}
 	
 	//implement observer
 	@Override
-	public void update(Observable o, Object arg) {
-		LTimer.setText("updated time!");
+	public void update(Observable arg0, Object arg1) {
+		LTimer.setText(model.hours + ":" + model.minutes);
+		
 	}
-	
+
 	private void createWindow() {
 		
 		setSize(400,200);
@@ -44,6 +49,8 @@ public class View extends JFrame implements Observer {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Alarm clock");
+		
+		eventController = new EventController(this, model);
 		
 		//panel
 		P = new JPanel(new BorderLayout());
@@ -65,8 +72,12 @@ public class View extends JFrame implements Observer {
 		
 		//content for middle
 		BPlus = new JButton("+");
+		BPlus.addActionListener(eventController);
 		BMinus = new JButton("-");
-		BPlus.addActionListener(new ListenerForButton(this));
+		BMinus.addActionListener(eventController);
+		
+		
+		
 		
 		LTimer = new JLabel("I'm the timer!");
 		LTimer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -78,7 +89,9 @@ public class View extends JFrame implements Observer {
 		//content for bottom
 		PBottom = new JPanel();
 		BStart = new JButton("Start");
+		BStart.addActionListener(eventController);
 		BStop = new JButton("Stop");
+		BStop.addActionListener(eventController);
 		PBottom.add(BStop);
 		PBottom.add(BStart);
 		
