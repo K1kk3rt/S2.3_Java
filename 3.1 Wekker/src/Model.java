@@ -2,17 +2,16 @@ import java.util.Observable;
 
 public class Model extends Observable{
 	
-	public int hours = 0;
 	public int minutes = 0;
+	public int seconds = 0;
 
-	
 	//methods
-	public void nextMinute() {
-		minutes++;
+	public void nextSecond() {
+		seconds++;
 		
-		if(minutes == 60) {
-			hours++;
-			minutes = 0;
+		if(seconds == 60) {
+			minutes++;
+			seconds = 0;
 		}
 		
 		setChanged();
@@ -21,7 +20,24 @@ public class Model extends Observable{
 	}
 	
 	public void setTimeToZero() {
-		hours = 0;
 		minutes = 0;
+		seconds = 0;
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void AddMinuteToStartTime() {
+		minutes++;
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void SubtractMinuteToStartTime() {
+		minutes--;
+		
+		setChanged();
+		notifyObservers();
 	}
 }

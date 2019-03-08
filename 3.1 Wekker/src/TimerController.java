@@ -11,7 +11,7 @@ public class TimerController implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		model.nextMinute();
+		model.nextSecond();
 	}
 	
 }

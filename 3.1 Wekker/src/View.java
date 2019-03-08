@@ -3,6 +3,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
+
 import javax.swing.*;
 
 public class View extends JFrame implements Observer{
@@ -31,7 +33,7 @@ public class View extends JFrame implements Observer{
 	//implement observer
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		LTimer.setText(model.hours + ":" + model.minutes);
+		LTimer.setText(model.minutes + ":" + model.seconds);
 		
 	}
 
@@ -76,10 +78,8 @@ public class View extends JFrame implements Observer{
 		BMinus = new JButton("-");
 		BMinus.addActionListener(eventController);
 		
-		
-		
-		
-		LTimer = new JLabel("I'm the timer!");
+		LTimer = new JLabel("press start");
+		LTimer.setFont(new Font("Arial", Font.BOLD, 50));
 		LTimer.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		P.add(LTimer, BorderLayout.CENTER);

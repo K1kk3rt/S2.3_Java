@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TimerTask;
@@ -23,19 +24,44 @@ public class EventController implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource() == view.BPlus) {
-			System.out.println("BPLUS PRESSED YA BOI");
+			BPlus();
 		}
 		if(e.getSource() == view.BMinus) {
-			System.out.println("BPLUS PRESSED YA BOI");
+			BMinus();
 		}
 		if(e.getSource() == view.BStart) {
-			model.setTimeToZero();
-			
-			tick = new Timer(1000, new TimerController(model));
-	        tick.start();
+			BStart();
 		}
 		if(e.getSource() == view.BStop) {
-			tick.stop();
+			BStop();
 		}
+	}
+	
+	//methods
+	private void BStart() {
+		tick = new Timer(1000, new TimerController(model));
+		
+		//determine color
+		if(model.minutes < 0 || model.seconds < 0) {
+			view.LTimer.setForeground(Color.RED);
+		}
+		else {
+			view.LTimer.setForeground(Color.GREEN);
+		}
+		
+        tick.start();
+	}
+	
+	private void BStop() {
+		tick.stop();
+		view.LTimer.setForeground(Color.BLACK);
+	}
+	
+	private void BMinus() {
+		model.SubtractMinuteToStartTime();
+	}
+		
+	private void BPlus() {
+		model.AddMinuteToStartTime();
 	}
 }
