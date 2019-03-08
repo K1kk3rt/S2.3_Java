@@ -2,6 +2,7 @@ import java.awt.Toolkit;
 import java.util.Observable;
 import java.util.Observer;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 

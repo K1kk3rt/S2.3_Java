@@ -39,22 +39,14 @@ public class EventController implements ActionListener {
 	
 	//methods
 	private void BStart() {
-		tick = new Timer(1000, new TimerController(model));
-		
-		//determine color
-		if(model.minutes < 0 || model.seconds < 0) {
-			view.LTimer.setForeground(Color.RED);
-		}
-		else {
-			view.LTimer.setForeground(Color.GREEN);
-		}
-		
+		tick = new Timer(1000, new TimerController(model, view));
         tick.start();
 	}
 	
 	private void BStop() {
 		tick.stop();
 		view.LTimer.setForeground(Color.BLACK);
+		model.setTimeToZero();
 	}
 	
 	private void BMinus() {
