@@ -31,8 +31,8 @@ public class LifeModel extends Observable {
 		random = new Random();
 		
 		//fill grid with random boolean, all edges are false
-		for (int i = 1; i < grid.length-1; i++) {
-		    for (int j = 1; j < grid[0].length-1; j++) {
+		for (int i = 0; i < grid.length; i++) {
+		    for (int j = 0; j < grid[0].length; j++) {
 		    	boolean randomBool = random.nextBoolean();
 		        grid[i][j] = randomBool;
 		    }
