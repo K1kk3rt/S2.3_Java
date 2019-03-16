@@ -6,6 +6,7 @@ public class LifeApplication extends JFrame{
 	
 	LifePanelView panelView;
 	LifeModel model;
+	JPanel bottomPanel;
 	
 	//construct
 	private LifeApplication() {
@@ -41,16 +42,10 @@ public class LifeApplication extends JFrame{
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Conway game of kutje");
-
-		createContent();
 		
 		add(panelView.panel);
 
 		setVisible(true);
-	}
-	
-	private void createContent() {
-		
 	}
 
 }

@@ -18,6 +18,7 @@ public class LifePanelView extends JPanel implements Observer{
 		this.model = model;
 		panel = new JPanel();
 		panel.setLayout(new GridLayout(model.getGridRows(), model.getGridColumns()));
+		
 		cellController = new CellController(this, model);
 		
 		//create button grid array
