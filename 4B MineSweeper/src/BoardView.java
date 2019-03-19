@@ -1,36 +1,28 @@
 import java.awt.Dimension;
 import java.awt.Toolkit;
+
 import javax.swing.*;
 
-public class LifeApplication extends JFrame{
+public class BoardView extends JFrame{
 	
-	LifePanelView panelView;
-	LifeModel model;
-	JPanel bottomPanel;
-	
+	JPanel mainPanel;
+	BoardPanelView boardPanel;
+
 	//construct
-	private LifeApplication() {
-		
-		model = new LifeModel();
-		
-		//create conway grid in buttons
-		panelView = new LifePanelView(model);
-		 
-        Timer tick = new Timer(1000, new LifeController(model));
-        tick.start();
+	public BoardView() {
+		mainPanel = new JPanel();
+		boardPanel = new BoardPanelView();
 		
 		createWindow();
 	}
 	
-	//main
-	public static void main(String[] args){
-		new LifeApplication();	
+	public static void main(String[] args) {
+		new BoardView();
 	}
 	
-	//methods
 	private void createWindow() {
-			
-		setSize(1200,1000);
+		
+		setSize(1400,1200);
 
 		//set location of window in middle of screen
 		Toolkit tk = Toolkit.getDefaultToolkit();	
@@ -41,9 +33,11 @@ public class LifeApplication extends JFrame{
 
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Conway game of kutje");
+		setTitle("Minesweeper");
 		
-		add(panelView.panel);
+		//add panel to frame
+		add(mainPanel);
+		mainPanel.add(boardPanel);
 
 		setVisible(true);
 	}

@@ -1,36 +1,35 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.*;
+import java.awt.Graphics;
 
-public class LifeApplication extends JFrame{
+public class mainMelkweg extends JFrame{
 	
-	LifePanelView panelView;
-	LifeModel model;
-	JPanel bottomPanel;
+	MelkwegPanel panel;
+	Graphics g;
 	
 	//construct
-	private LifeApplication() {
+	public mainMelkweg() {
 		
-		model = new LifeModel();
+		panel = new MelkwegPanel();
 		
-		//create conway grid in buttons
-		panelView = new LifePanelView(model);
-		 
-        Timer tick = new Timer(1000, new LifeController(model));
-        tick.start();
-		
+		//generate window
 		createWindow();
+		
+		//make and draw stars at random position
+		panel.repaint();
+		
+	}
+
+	public static void main(String[] args) {
+		
+		new mainMelkweg();
 	}
 	
-	//main
-	public static void main(String[] args){
-		new LifeApplication();	
-	}
-	
-	//methods
 	private void createWindow() {
-			
-		setSize(1200,1000);
+		
+		setSize(1200,800);
 
 		//set location of window in middle of screen
 		Toolkit tk = Toolkit.getDefaultToolkit();	
@@ -41,11 +40,12 @@ public class LifeApplication extends JFrame{
 
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Conway game of kutje");
+		setTitle("Melkweg");
 		
-		add(panelView.panel);
+		//set background color and add panel to frame
+		panel.setBackground(Color.BLUE);
+		add(panel);
 
 		setVisible(true);
 	}
-
 }
