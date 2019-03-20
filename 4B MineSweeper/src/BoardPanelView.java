@@ -1,93 +1,66 @@
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.*;
 
-public class BoardPanelView extends JPanel{
+public class BoardPanelView extends JPanel implements Observer{
 	
 	//fields
 	BoardGame game;
-	final int columns = 40;
-	final int rows = 30;
 	
 	//construct
 	public BoardPanelView() {
 		
+		//create board game
+		game = new BoardGame(this);
+		
 		//create panel for board and set layout, rows and columns
-		GridLayout boardLayout = new GridLayout(rows, columns);
+		GridLayout boardLayout = new GridLayout(game.getRows(), game.getColumns());
 		setLayout(boardLayout);
 		
-		//create board game and print
-		game = new BoardGame(this);
+		game.createGame();
+		
+		printGame();
+		
+		game.addObserver(this);
+	}
+	
+	//implement Observer
+	@Override
+	public void update(Observable o, Object arg) {
+		
+		Zone zone;
+		
+		if (arg instanceof Zone) {
+			zone = (Zone)arg;
+			
+			printZone(zone);
+		}
 	}
 	
 	public void printGame() {
 		//loop through grid and define zone look
-		for(Zone item : game.gameGrid) {
-			if (item.IsRevealed) {
-				item.setBackground(Color.GRAY);
-				if(item.IsMine) {
-					item.setBackground(Color.BLACK);
-				}
-				if(item.Neighbours > 0 && !item.IsMine) {
-					String count = String.valueOf(item.Neighbours);
-					item.setText(count);
-				}
-				if(item.IsMarked) {
-					item.setBackground(Color.RED);
-				}
+		for(Zone item : game.getGameGrid()) {
+			printZone(item);
+		}
+	}
+	
+	private void printZone(Zone zone) {
+		if (zone.getIsRevealed()) {
+			if(!zone.getIsMarked()) {
+				zone.setBackground(new Color(203, 204, 206));
+			}
+			if(zone.getIsMine()) {
+				zone.setBackground(Color.BLACK);
+			}
+			if(zone.getNeighbours() > 0 && !zone.getIsMine() && !zone.getIsMarked()) {
+				String count = String.valueOf(zone.getNeighbours());
+				zone.setText(count);
+			}
+			if(zone.getIsMarked()) {
+				zone.setBackground(Color.RED);
 			}
 		}
-	}
-	
-	public void revealZones(Zone zone) {
-		//get clicked grid index position
-		int i = game.getGridIndex(zone.X, zone.Y);
-		
-		//reveal zone
-		game.gameGrid[i].IsRevealed = true;
-		
-		//reveal more zones if it doesn't have neighbor mines
-		if(game.gameGrid[i].Neighbours == 0) {
-			revealNeighbourZones(zone);
-		}
-		
-		printGame();
-	}
-	
-	public void revealNeighbourZones(Zone zone) {
-		
-		for (int xoff = -1; xoff <= 1; xoff++) {
-			for (int yoff = -1; yoff <= 1; yoff++) {
-				int x = zone.X + xoff;
-				int y = zone.Y + yoff;
-				int i = game.getGridIndex(x, y);
-				
-				if(x>-1 && x < columns && y > -1 && y < rows) {
-					if(!game.gameGrid[i].IsMine && !game.gameGrid[i].IsRevealed) {
-						revealZones(game.gameGrid[i]);
-					}
-				}
-			}
-		}
-	}
-	
-	public void markZone(Zone zone) {
-		int i = game.getGridIndex(zone.X, zone.Y);
-		game.gameGrid[i].IsMarked = true;
-		game.gameGrid[i].IsRevealed = true;
-		
-		printGame();
-	}
-	
-	public void gameOver() {
-		//loop through game grid and set isRevealed true
-		for(Zone item : game.gameGrid) {
-			item.IsRevealed = true;
-		}
-		
-		printGame();
 	}
 }

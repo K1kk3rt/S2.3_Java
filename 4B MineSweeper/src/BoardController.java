@@ -1,28 +1,37 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.*;
 
-public class BoardView extends JFrame{
+public class BoardController extends JFrame{
 	
 	JPanel mainPanel;
 	BoardPanelView boardPanel;
+	int width;
+	int height;
 
 	//construct
-	public BoardView() {
+	public BoardController() {
 		mainPanel = new JPanel();
 		boardPanel = new BoardPanelView();
+		
+		width = boardPanel.game.getColumns()*35;
+		height = boardPanel.game.getRows()*35;
+		
+		mainPanel.setBackground(Color.BLUE);
+		boardPanel.setBackground(Color.GREEN);
 		
 		createWindow();
 	}
 	
 	public static void main(String[] args) {
-		new BoardView();
+		new BoardController();
 	}
 	
 	private void createWindow() {
 		
-		setSize(1400,1200);
+		setSize(width, height + 200);
 
 		//set location of window in middle of screen
 		Toolkit tk = Toolkit.getDefaultToolkit();	

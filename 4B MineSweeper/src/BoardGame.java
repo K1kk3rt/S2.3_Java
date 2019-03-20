@@ -1,11 +1,20 @@
 import java.awt.Color;
+import java.util.Observable;
 import java.util.Random;
 
-public class BoardGame {
+public class BoardGame extends Observable{
 	
-	BoardPanelView View;
-	Zone[] gameGrid;
-	final int AmountOfBombs = 150;
+	private BoardPanelView View;
+	private Zone[] GameGrid;
+	private final int AmountOfBombs = 150;
+	private final int Columns = 30;
+	private final int Rows = 20;
+	
+	//getters
+	public Zone[] getGameGrid() {return GameGrid;}
+	public int getAmoundOfBombs() {return AmountOfBombs;}
+	public int getColumns() {return Columns;}
+	public int getRows() {return Rows;}
 	
 	//construct
 	public BoardGame(BoardPanelView view) {
@@ -13,29 +22,28 @@ public class BoardGame {
 		View = view;
 		
 		//generate game grid
-		gameGrid = new Zone[view.rows * view.columns];
-		createGame();
+		GameGrid = new Zone[Rows * Columns];
 	}
 	
-	private void createGame() {
+	//methods
+	public void createGame() {
 		
 		//loop through grid and create instance of zone for every Zone item in grid
 		int i = 0; 
-		for(int y = 0; y < View.rows; y++) {
-			for (int x = 0; x < View.columns; x++) {
-				gameGrid[i] = new Zone(x,y);
-				//gameGrid[i].addActionListener(new ZoneClickListener(View));
-				gameGrid[i].addMouseListener(new ZoneClickListener(View));
-				View.add(gameGrid[i]);
+		for(int y = 0; y < Rows; y++) {
+			for (int x = 0; x < Columns; x++) {
+				GameGrid[i] = new Zone(x,y, i);
+				GameGrid[i].addMouseListener(new ZoneClickListener(this));
+				View.add(GameGrid[i]);
 				i++;
 			}
 		}
 		
 		//pick available bomb spots, save in array
 		i=0;
-		boolean bombOptions[][] = new boolean[View.columns][View.rows];
-		for(int y = 0; y < View.rows; y++) {
-			for (int x = 0; x < View.columns; x++) {
+		boolean bombOptions[][] = new boolean[Columns][Columns];
+		for(int y = 0; y < Rows; y++) {
+			for (int x = 0; x < Columns; x++) {
 				bombOptions[x][y] = true;
 			}
 		}
@@ -44,11 +52,11 @@ public class BoardGame {
 		i=0;
 		while (i < AmountOfBombs) {
 			Random rand = new Random();
-			int x = rand.nextInt(View.columns);
-			int y = rand.nextInt(View.rows);
+			int x = rand.nextInt(Columns);
+			int y = rand.nextInt(Rows);
 			
 			if(bombOptions[x][y]) {
-				gameGrid[getGridIndex(x,y)].IsMine = true;
+				GameGrid[getGridIndex(x,y)].setIsMine(true);
 				bombOptions[x][y] = false;
 			}
 			
@@ -56,45 +64,103 @@ public class BoardGame {
 		}
 
 		//loop through grid and define neighbor count
-		i=0; 
-		for(int y = 0; y < View.rows; y++) {
-			for (int x = 0; x < View.columns; x++) {
-				gameGrid[getGridIndex(x,y)].Neighbours = countNeighbours(x,y);
-			}
+		for(i = 0; i < GameGrid.length; i++) {
+			GameGrid[i].setNeighbours(countNeighbours(i));
 		}
+		
+		System.out.println(GameGrid);
 	}
 	
-	private int countNeighbours(int x, int y) {
+	private int countNeighbours(int i) {
+
 		int total = 0;
 		
-		//offset array
-		int[][] neighbors = {
-		    {-1, -1}, {-1, 0}, {-1, +1},
-		    { 0, -1},          { 0, +1},
-		    {+1, -1}, {+1, 0}, {+1, +1}};
-			
-		//use offset array to determine alive neighbors
-		for (int[] offset : neighbors) {
-			int xOff = x + offset[0];
-			int yOff = y + offset[1];
-			
-			//make sure offset is not out of array bounds
-			if(xOff >= 0 && xOff < View.columns && yOff >= 0 && yOff < View.rows) {
-				if (gameGrid[getGridIndex(xOff, yOff)].IsMine) {
-					total++;
-			    }
+		for (int xoff = -1; xoff <= 1; xoff++) {
+			for (int yoff = -1; yoff <= 1; yoff++) {
+				if(i < -1) {
+					int x = GameGrid[i].getX() + xoff;
+					int y = GameGrid[i].getY() + yoff;
+					i = getGridIndex(x, y);
+					
+					if(x>-1 && x < Columns && y > -1 && y < Rows) {
+						if (GameGrid[i].getIsMine()) {
+							total++;
+						}
+					}					
+				}
 			}
-			
 		}
 		
 		return total;
 	}
+
+	public void revealZones(Zone zone) {
+		//get clicked grid index position
+		int i = zone.getI();
+		
+		//reveal zone
+		GameGrid[i].setIsRevealed(true);
+		
+		//reveal more zones if it doesn't have neighbor mines
+		if(GameGrid[i].getNeighbours() == 0) {
+			revealNeighbourZones(zone.getI());
+		}
+		
+		//update board
+		setChanged();
+		notifyObservers(GameGrid[i]);
+	}
+	public void revealNeighbourZones(int i) {
+		
+		for (int xoff = -1; xoff <= 1; xoff++) {
+			for (int yoff = -1; yoff <= 1; yoff++) {
+				if(i > -1) {
+					int x = GameGrid[i].getX() + xoff;
+					int y = GameGrid[i].getY() + yoff;
+					i = getGridIndex(x, y);
+					
+					if(x>-1 && x < Columns && y > -1 && y < Rows) {
+						if(!GameGrid[i].getIsMine() && !GameGrid[i].getIsRevealed()) {
+							revealZones(GameGrid[i]);
+						}
+					}
+				}
+			}
+		}
+	}
 	
-	public int getGridIndex(int xPos, int yPos) {
+	public void markZone(Zone zone) {
+		int i = zone.getI();
+		
+		if(!GameGrid[i].getIsRevealed()) {
+			GameGrid[i].setIsMarked(true);
+			GameGrid[i].setIsRevealed(true);
+		}
+		
+	}
+	
+	public void unMarkZone(Zone zone) {
+		int i = zone.getI();
+		
+		if(GameGrid[i].getIsRevealed()) {
+			GameGrid[i].setIsMarked(false);
+			GameGrid[i].setIsRevealed(false);
+			GameGrid[i].setBackground(new Color(47, 48, 52));
+		}
+	}
+	
+	public void gameOver() {
+		//loop through game grid and set isRevealed true
+		for(Zone item : GameGrid) {
+			item.setIsRevealed(true);
+		}
+	}
+	
+	private int getGridIndex(int xPos, int yPos) {
 		int i = 0; 
-		for(int y = 0; y < View.rows; y++) {
-			for (int x = 0; x < View.columns; x++) {
-				if(gameGrid[i].X == xPos && gameGrid[i].Y == yPos) {
+		for(int y = 0; y < Rows; y++) {
+			for (int x = 0; x < Columns; x++) {
+				if(GameGrid[i].getX() == xPos && GameGrid[i].getY() == yPos) {
 					return i;
 				}
 				i++;
@@ -103,4 +169,5 @@ public class BoardGame {
 		
 		return -1;
 	}
+
 }
