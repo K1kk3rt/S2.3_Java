@@ -9,6 +9,7 @@ public class BoardPanelView extends JPanel implements Observer{
 	//fields
 	BoardGame game;
 	
+	
 	//construct
 	public BoardPanelView() {
 		
@@ -19,9 +20,7 @@ public class BoardPanelView extends JPanel implements Observer{
 		GridLayout boardLayout = new GridLayout(game.getRows(), game.getColumns());
 		setLayout(boardLayout);
 		
-		game.createGame();
-		
-		printGame();
+		game.createGrid();
 		
 		game.addObserver(this);
 	}
@@ -30,35 +29,37 @@ public class BoardPanelView extends JPanel implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		
-		Zone zone;
+		ZoneModel zone;
 		
-		if (arg instanceof Zone) {
-			zone = (Zone)arg;
+		if (arg instanceof ZoneModel) {
+			zone = (ZoneModel)arg;
 			
 			printZone(zone);
+			
 		}
 	}
 	
 	public void printGame() {
 		//loop through grid and define zone look
-		for(Zone item : game.getGameGrid()) {
+		for(ZoneModel item : game.getGameGrid()) {
 			printZone(item);
 		}
 	}
 	
-	private void printZone(Zone zone) {
-		if (zone.getIsRevealed()) {
-			if(!zone.getIsMarked()) {
+	private void printZone(ZoneModel zone) {
+		
+		if (zone.IsRevealed) {
+			if(!zone.IsMarked) {
 				zone.setBackground(new Color(203, 204, 206));
 			}
-			if(zone.getIsMine()) {
+			if(zone.IsMine) {
 				zone.setBackground(Color.BLACK);
 			}
-			if(zone.getNeighbours() > 0 && !zone.getIsMine() && !zone.getIsMarked()) {
-				String count = String.valueOf(zone.getNeighbours());
+			if(zone.Neighbours > 0 && !zone.IsMine && !zone.IsMarked) { 
+				String count = String.valueOf(zone.Neighbours);
 				zone.setText(count);
 			}
-			if(zone.getIsMarked()) {
+			if(zone.IsMarked) {
 				zone.setBackground(Color.RED);
 			}
 		}

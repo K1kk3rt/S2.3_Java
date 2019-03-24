@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class ZoneClickListener implements MouseListener {
+	
 	BoardGame Game;
 
 	// construct
@@ -15,26 +16,29 @@ public class ZoneClickListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 
 		// get zone from mouseEvent
-		Zone zone = null;
+		ZoneModel zone = null;
 
-		if (e.getSource() instanceof Zone) {
-			zone = (Zone) e.getSource();
+		if (e.getSource() instanceof ZoneModel) {
+			zone = (ZoneModel) e.getSource();
 		}
 
 		// left click
 		if (e.getButton() == MouseEvent.BUTTON1) {
-
-			// game over for clicked mine
-			if (zone.getIsMine() && !zone.getIsMarked()) {
-				Game.gameOver();
+			System.out.println("mine: " + zone.IsMine);
+			//on first click start the game
+			if(!Game.getGameIsStarted()) {
+				Game.createGame(zone);
+				Game.setGameIsStarted(false);
+				//Game.gameOver();
 			}
+			
 			Game.revealZones(zone);
 		}
 		// right click
 		if (e.getButton() == MouseEvent.BUTTON3) {
 			// System.out.println("Right Click!");
 
-			if (!zone.getIsMarked()) {
+			if (!zone.IsMarked) {
 				Game.markZone(zone);
 			} else {
 				Game.unMarkZone(zone);

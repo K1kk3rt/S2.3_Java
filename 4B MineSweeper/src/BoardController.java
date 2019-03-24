@@ -16,11 +16,8 @@ public class BoardController extends JFrame{
 		mainPanel = new JPanel();
 		boardPanel = new BoardPanelView();
 		
-		width = boardPanel.game.getColumns()*35;
-		height = boardPanel.game.getRows()*35;
-		
-		mainPanel.setBackground(Color.BLUE);
-		boardPanel.setBackground(Color.GREEN);
+		width = boardPanel.game.getColumns()*45;
+		height = boardPanel.game.getRows()*45;
 		
 		createWindow();
 	}
