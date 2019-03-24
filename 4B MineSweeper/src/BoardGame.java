@@ -132,7 +132,7 @@ public class BoardGame extends Observable{
 		System.out.println("Neighbours: " + GameGrid[i].Neighbours + " " + GameGrid[i].X + "," + GameGrid[i].Y);
 		
 		//reveal more zones if it doesn't have neighbor mines
-		if(GameGrid[i].Neighbours == 0) {
+		if(GameGrid[i].Neighbours == 0 && !GameGrid[i].IsRevealed) {
 			revealNeighbourZones(i);
 		}
 		
@@ -140,18 +140,20 @@ public class BoardGame extends Observable{
 		setChanged();
 		notifyObservers(GameGrid[i]);
 	}
-	public void revealNeighbourZones(int i) {
+	private void revealNeighbourZones(int i) {
 		
 		for (int yoff = -1; yoff <= 1; yoff++) {
 			for (int xoff = -1; xoff <= 1; xoff++) {
 				int x = GameGrid[i].X + xoff;
 				int y = GameGrid[i].Y + yoff;
-				i = getGridIndex(x, y);
+				int index = getGridIndex(x, y);
 				
 				if(x>-1 && x < Columns && y > -1 && y < Rows) {
-					if(!GameGrid[i].IsRevealed && !GameGrid[i].IsMine) {
-						System.out.println("Neighbours: " + GameGrid[i].Neighbours);
-						revealZones(GameGrid[i]);
+					if(!GameGrid[index].IsRevealed && !GameGrid[index].IsMine) {
+						GameGrid[index].IsRevealed = true;
+						setChanged();
+						notifyObservers(GameGrid[index]);
+						//revealZones(GameGrid[i]);
 					}
 				}
 			}
