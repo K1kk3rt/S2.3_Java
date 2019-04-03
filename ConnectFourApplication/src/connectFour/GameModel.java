@@ -71,7 +71,7 @@ public class GameModel extends Observable{
 		
 		controleerHorizontaalWinst(grid[rij][kolom], rij);
 		controleerVerticaalWinst(grid[rij][kolom], kolom);
-		//controlleerDiagonaalWinstRechts(grid[rij][kolom], rij, kolom);
+		controlleerDiagonaalWinstRechts(grid[rij][kolom], rij, kolom);
 		//controlleerDiagonaalWinstLinks(grid[rij][kolom], rij, kolom);
 		
 		if(!this.gewonnen) {
@@ -132,7 +132,7 @@ public class GameModel extends Observable{
 	}
 	
 	private void controlleerDiagonaalWinstRechts(status player, int rij, int kolom) {
-		int aantal = 0;
+		/*int aantal = 0;
 		
 		int[][] offsetRight = {
 							    {-3, 3},							
@@ -159,7 +159,7 @@ public class GameModel extends Observable{
 		    	 }
 			}
 			
-		}
+		}*/
 	}
 	
 	private void controlleerDiagonaalWinstLinks(status player, int rij, int kolom) {
