@@ -87,6 +87,11 @@ public class ConnectFourConsoleView implements Observer{
 		catch(Exception e) {
 			updateConnectFour();
 		}
+		finally {
+			if(scanner != null) {
+				scanner.close();
+			}
+		}
 	}
 	
 	private String displayPlayer() {
