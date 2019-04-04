@@ -28,6 +28,9 @@ public class ConnectFourConsoleView implements Observer{
 		if(game.getGewonnen()) {
 			gewonnen();
 		}
+		if(game.getGelijkspel()) {
+			gelijkspel();
+		}
 		else {
 			getInput();
 		}
@@ -113,5 +116,9 @@ public class ConnectFourConsoleView implements Observer{
 	
 	private void gewonnen() {
 		System.out.println(displayPlayer() + "heeft gewonnen!");
+	}
+	
+	private void gelijkspel() {
+		System.out.println("gelijkspel!");
 	}
 }

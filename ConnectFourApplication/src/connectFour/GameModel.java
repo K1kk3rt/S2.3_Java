@@ -16,6 +16,8 @@ public class GameModel extends Observable{
 	private final int KOLOMMEN = 7;
 	private int ronde;
 	private boolean gewonnen;
+	private boolean gelijkspel;
+	private ConnectFourGraphicView view;
 	
 	//getters
 	public status[][] getGrid() {
@@ -23,6 +25,9 @@ public class GameModel extends Observable{
 	}
 	public status getStatusVanVakje(int rij, int kolom) {
 		return grid[rij][kolom];
+	}
+	public int getRijen() {
+		return RIJEN;
 	}
 	public int getKolommen() {
 		return KOLOMMEN;
@@ -39,6 +44,9 @@ public class GameModel extends Observable{
 	public boolean getGewonnen() {
 		return gewonnen;
 	}
+	public boolean getGelijkspel() {
+		return gelijkspel;
+	}
 	
 	//construct
 	public GameModel() {
@@ -46,10 +54,11 @@ public class GameModel extends Observable{
 		
 		ronde = 0;
 		gewonnen = false;
+		gelijkspel = false;
 		
 		initGame();
 		
-		new ConnectFourConsoleView(this);
+		view = new ConnectFourGraphicView(this);
 	}
 	
 	
@@ -75,6 +84,7 @@ public class GameModel extends Observable{
 		controleerVerticaalWinst(grid[rij][kolom], kolom);
 		controlleerDiagonaalWinstRechts(grid[rij][kolom], rij, kolom);
 		controlleerDiagonaalWinstLinks(grid[rij][kolom], rij, kolom);
+		controlleerGelijkspel();
 		
 		if(this.gewonnen) {
 			ronde--;
@@ -149,7 +159,7 @@ public class GameModel extends Observable{
 		for(int[] offset : offsetRight) {
 			int r = rij + offset[0];
 			int k = kolom + offset[1];
-			if(r >= 0 && r <= RIJEN && k >= 0 && k <= KOLOMMEN) {
+			if(r >= 0 && r <= RIJEN-1 && k >= 0 && k <= KOLOMMEN-1) {
 				if(grid[r][k] == player) {
 					aantal++;
 				}
@@ -181,7 +191,7 @@ public class GameModel extends Observable{
 		for(int[] offset : offsetLeft) {
 			int r = rij + offset[0];
 			int k = kolom + offset[1];
-			if(r >= 0 && r <= RIJEN && k >= 0 && k <= KOLOMMEN) {
+			if(r >= 0 && r <= RIJEN-1 && k >= 0 && k <= KOLOMMEN-1) {
 				if(grid[r][k] == player) {
 					aantal++;
 				}
@@ -194,4 +204,23 @@ public class GameModel extends Observable{
 			}
 		}
 	}
+	
+	private void controlleerGelijkspel() {
+		int aantal = 0;
+		
+		for (int rij = 0; rij<grid.length; rij++){
+		     for (int kolom = 0; kolom<grid[rij].length; kolom++){
+		    	 if(grid[rij][kolom] != status.isEmpty) {
+		    		 aantal++;
+		    	 }
+		    	 
+		     }
+		}
+		
+		if(aantal == RIJEN*KOLOMMEN) {
+			gelijkspel = true;
+		}
+	}
+	
+	
 }
