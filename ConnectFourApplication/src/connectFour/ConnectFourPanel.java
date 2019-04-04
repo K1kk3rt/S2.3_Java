@@ -19,9 +19,9 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	private JButton[][] grid;
 	private final int BUTTONWIDTH = 100;
 	private final int BUTTONHEIGHT = 100;
-	private BufferedImage afbLeeg;
-	private BufferedImage afbSpeler1;
-	private BufferedImage afbSpeler2;
+	private Image afbLeeg;
+	private Image afbSpeler1;
+	private Image afbSpeler2;
 	
 	
 	//getters
@@ -37,10 +37,12 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	
 	//construct
 	public ConnectFourPanel(GameModel game) {
+		
 		//set layout
 		setLayout(new GridLayout(game.getRijen(),game.getKolommen()));
 		
 		this.game = game;
+		this.game.addObserver(this);
 		
 		grid = new JButton[game.getRijen()][game.getKolommen()];
 		
@@ -73,27 +75,27 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		
 		button.setBorder(null);
 		
-		Image speler1 = afbSpeler1.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
-		Image speler2 = afbSpeler2.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
-		Image leeg = afbLeeg.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
-		
 		if(game.getGrid()[rij][kolom] == status.player1) {
-			button.setIcon(new ImageIcon(speler1));
+			button.setIcon(new ImageIcon(afbSpeler1));
 		}
 		if(game.getGrid()[rij][kolom] == status.player2) {
-			button.setIcon(new ImageIcon(speler2));
+			button.setIcon(new ImageIcon(afbSpeler2));
 		}
 		else {
-			button.setIcon(new ImageIcon(leeg));
+			button.setIcon(new ImageIcon(afbLeeg));
 		}
 		
 	}
 	
 	private void laadAfbeeldingen() {
 		try {
-			afbLeeg = ImageIO.read(new FileInputStream("src/assets/cell_empty.png"));
-			afbSpeler1 = ImageIO.read(new FileInputStream("src/assets/cell_player1.png"));
-			afbSpeler2 = ImageIO.read(new FileInputStream("src/assets/cell_player2.png"));
+			Image leeg = ImageIO.read(new FileInputStream("src/assets/cell_empty.png"));
+			Image speler1 = ImageIO.read(new FileInputStream("src/assets/cell_player2.png"));
+			Image speler2 = ImageIO.read(new FileInputStream("src/assets/cell_player1.png"));
+			
+			afbSpeler1 = speler1.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
+			afbSpeler2 = speler2.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
+			afbLeeg = leeg.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

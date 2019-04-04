@@ -59,6 +59,7 @@ public class GameModel extends Observable{
 		initGame();
 		
 		view = new ConnectFourGraphicView(this);
+		//new ConnectFourConsoleView(this);
 	}
 	
 	
@@ -76,8 +77,8 @@ public class GameModel extends Observable{
 		
 		int rij = bepaalRij(kolom);
 		
-		grid[rij][kolom] = player;
-		
+		grid[rij][kolom] = player;		
+
 		ronde++;
 		
 		controleerHorizontaalWinst(grid[rij][kolom], rij);
@@ -91,7 +92,7 @@ public class GameModel extends Observable{
 		}
 		
 		setChanged();
-		notify();
+		notifyObservers();
 	}
 	
 	private int bepaalRij(int kolom) {
