@@ -21,6 +21,10 @@ public class ActionListenerController implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
+		if(game.getGewonnen()) {
+			game.restartGame();
+		}
+		
 		for (int rij = 0; rij<game.getGrid().length; rij++){
 		     for (int kolom = 0; kolom<game.getGrid()[rij].length; kolom++){
 		    	 if (panel.getButtonGrid()[rij][kolom] == e.getSource()){

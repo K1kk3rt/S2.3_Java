@@ -16,6 +16,7 @@ import connectFour.GameModel.status;
 public class ConnectFourPanel extends JPanel implements Observer{
 	
 	private GameModel game;
+	private ConnectFourGraphicView view;
 	private JButton[][] grid;
 	private final int BUTTONWIDTH = 100;
 	private final int BUTTONHEIGHT = 100;
@@ -36,12 +37,13 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	}
 	
 	//construct
-	public ConnectFourPanel(GameModel game) {
+	public ConnectFourPanel(ConnectFourGraphicView view, GameModel game) {
 		
 		//set layout
 		setLayout(new GridLayout(game.getRijen(),game.getKolommen()));
 		
 		this.game = game;
+		this.view = view;
 		this.game.addObserver(this);
 		
 		grid = new JButton[game.getRijen()][game.getKolommen()];
@@ -64,27 +66,30 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		for (int rij = 0; rij<grid.length; rij++){
 		     for (int kolom = 0; kolom<grid[rij].length; kolom++){
 		    	 grid[rij][kolom] = new JButton();
-		    	 setButtonBackground(grid[rij][kolom], rij, kolom);
+		    	 setButtonBackground(rij, kolom);
 		    	 grid[rij][kolom].addActionListener(new ActionListenerController(this, this.game));
 		    	 add(grid[rij][kolom]);
 		     }
 		}
 	}
 	
-	private void setButtonBackground(JButton button, int rij, int kolom) {
+	private void setButtonBackground(int rij, int kolom) {
 		
-		button.setBorder(null);
+		grid[rij][kolom].setBorder(null);
 		
-		if(game.getGrid()[rij][kolom] == status.player1) {
-			button.setIcon(new ImageIcon(afbSpeler1));
+		switch(game.getGrid()[rij][kolom]) {
+		  case player1:
+			  grid[rij][kolom].setIcon(new ImageIcon(afbSpeler1));
+		    break;
+		  case player2:
+			  grid[rij][kolom].setIcon(new ImageIcon(afbSpeler2));
+			break;
+		  case isEmpty:
+			  grid[rij][kolom].setIcon(new ImageIcon(afbLeeg));
+			break;
+		  default:
+			  //grid[rij][kolom].setIcon(new ImageIcon(afbLeeg));
 		}
-		if(game.getGrid()[rij][kolom] == status.player2) {
-			button.setIcon(new ImageIcon(afbSpeler2));
-		}
-		else {
-			button.setIcon(new ImageIcon(afbLeeg));
-		}
-		
 	}
 	
 	private void laadAfbeeldingen() {
@@ -102,9 +107,34 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	}
 	
 	private void displayGame() {
+		int rij = game.getCurrentRij();
+		int kolom = game.getCurrentKolom();
+		
+		setButtonBackground(rij, kolom);
+		
+		if(game.getGewonnen()) {
+			gewonnen();
+		}
+		if(game.getGelijkspel()) {
+			gelijkspel();
+		}
+		if(game.getRestart()) {
+			restart();
+		}
+	}
+	
+	private void gewonnen() {
+		view.setLabelGewonnen();
+	}
+	
+	private void gelijkspel() {
+		view.setLabelGelijkspel();
+	}
+	
+	private void restart() {
 		for (int rij = 0; rij<grid.length; rij++){
 		     for (int kolom = 0; kolom<grid[rij].length; kolom++){
-		    	 setButtonBackground(grid[rij][kolom], rij, kolom);
+		    	 setButtonBackground(rij, kolom);
 		     }
 		}
 	}

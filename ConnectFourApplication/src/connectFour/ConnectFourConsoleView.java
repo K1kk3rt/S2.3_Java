@@ -12,7 +12,10 @@ public class ConnectFourConsoleView implements Observer{
 	public ConnectFourConsoleView(GameModel game) {
 		this.game = game;
 		
+		game.addObserver(this);
+		
 		updateConnectFour();
+		
 	}
 	
 	//implement interfaces

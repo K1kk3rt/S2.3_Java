@@ -17,7 +17,9 @@ public class GameModel extends Observable{
 	private int ronde;
 	private boolean gewonnen;
 	private boolean gelijkspel;
-	private ConnectFourGraphicView view;
+	private boolean restart;
+	private int currentRij;
+	private int currentKolom;
 	
 	//getters
 	public status[][] getGrid() {
@@ -47,6 +49,15 @@ public class GameModel extends Observable{
 	public boolean getGelijkspel() {
 		return gelijkspel;
 	}
+	public boolean getRestart() {
+		return restart;
+	}
+	public int getCurrentRij() {
+		return currentRij;
+	}
+	public int getCurrentKolom() {
+		return currentKolom;
+	}
 	
 	//construct
 	public GameModel() {
@@ -55,15 +66,26 @@ public class GameModel extends Observable{
 		ronde = 0;
 		gewonnen = false;
 		gelijkspel = false;
+		restart = false;
 		
 		initGame();
 		
-		view = new ConnectFourGraphicView(this);
+		new ConnectFourGraphicView(this);
 		//new ConnectFourConsoleView(this);
 	}
 	
-	
 	//methods
+	public void restartGame() {
+		restart = true;
+		gewonnen = false;
+		gelijkspel = false;
+		
+		initGame();
+		
+		setChanged();
+		notifyObservers();
+	}	
+	
 	private void initGame() {
 		
 		for (int rij = 0; rij<grid.length; rij++){
@@ -74,25 +96,31 @@ public class GameModel extends Observable{
 	}
 	
 	public void insertMuntje(int kolom, status player) {
+		restart = false;
 		
 		int rij = bepaalRij(kolom);
 		
-		grid[rij][kolom] = player;		
-
-		ronde++;
-		
-		controleerHorizontaalWinst(grid[rij][kolom], rij);
-		controleerVerticaalWinst(grid[rij][kolom], kolom);
-		controlleerDiagonaalWinstRechts(grid[rij][kolom], rij, kolom);
-		controlleerDiagonaalWinstLinks(grid[rij][kolom], rij, kolom);
-		controlleerGelijkspel();
-		
-		if(this.gewonnen) {
-			ronde--;
+		if(rij >= 0 && kolom >= 0) {
+			grid[rij][kolom] = player;
+			
+			ronde++;
+			
+			controleerHorizontaalWinst(grid[rij][kolom], rij);
+			controleerVerticaalWinst(grid[rij][kolom], kolom);
+			controlleerDiagonaalWinstRechts(grid[rij][kolom], rij, kolom);
+			controlleerDiagonaalWinstLinks(grid[rij][kolom], rij, kolom);
+			controlleerGelijkspel();
+			
+			if(this.gewonnen) {
+				ronde--;
+			}
+			
+			currentRij = rij;
+			currentKolom = kolom;
+			
+			setChanged();
+			notifyObservers();
 		}
-		
-		setChanged();
-		notifyObservers();
 	}
 	
 	private int bepaalRij(int kolom) {

@@ -1,13 +1,18 @@
 package connectFour;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.*;
 
-public class ConnectFourGraphicView extends JFrame{
+import connectFour.GameModel.status;
+
+public class ConnectFourGraphicView extends JFrame implements Observer{
 	
 	GameModel game;
 	ConnectFourPanel connectFourPanel;
@@ -22,11 +27,21 @@ public class ConnectFourGraphicView extends JFrame{
 	public ConnectFourGraphicView(GameModel game){
 		this.game = game;
 		
-		connectFourPanel = new ConnectFourPanel(this.game);
+		connectFourPanel = new ConnectFourPanel(this, this.game);
 		
 		createWindow();
 		createTopBar();
 		createBottomBar();
+		
+		game.addObserver(this);
+		
+	}
+	
+	//implement interfaces
+	@Override
+	public void update(Observable o, Object arg) {
+		lblStatus.setText(game.getPlayer() + " is aan de buurt!");
+		setBottomBarColor();
 		
 	}
 	
@@ -80,7 +95,9 @@ public class ConnectFourGraphicView extends JFrame{
 		bottomBar = new JPanel();
 		
 		lblStatus = new JLabel();
-		lblStatus.setText("status bar");
+		lblStatus.setText("player 1 is aan de buurt!");
+		
+		setBottomBarColor();
 		
 		//add label to panel
 		bottomBar.add(lblStatus);
@@ -88,4 +105,29 @@ public class ConnectFourGraphicView extends JFrame{
 		//add panel to main window
 		add(bottomBar, BorderLayout.PAGE_END);
 	}
+	
+	public void setLabelGewonnen() {
+		lblStatus.setText(game.getPlayer() + " heeft gewonnen!");
+	}
+	
+	public void setLabelGelijkspel() {
+		lblStatus.setText("Gelijkspel!");
+	}
+	
+	private void setBottomBarColor() {
+		//player1 #80D5FF
+		//player2 #006597
+		
+		Color player1 = new Color(128,213,255);
+		Color player2 = new Color(0,101,151);
+		
+		if(game.getPlayer() == status.player1) {
+			bottomBar.setBackground(player2);
+		}
+		if(game.getPlayer() == status.player2) {
+			bottomBar.setBackground(player1);
+		}
+		
+	}
+	
 }
