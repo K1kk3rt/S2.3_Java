@@ -9,6 +9,9 @@ public class ConnectFourConsoleView implements Observer{
 	private GameModel game;
 	
 	//construct
+	//voeg een instantie van het GameModel toe, zodat properties en methodes van met model bereikt kunnen worden
+	//voeg deze klasse toe als observer, zodat deze geupdate wordt bij een wijziging (wanneer een speler een zet doet)
+	//weergeef het spel met updateConnectFour();
 	public ConnectFourConsoleView(GameModel game) {
 		this.game = game;
 		
@@ -24,6 +27,9 @@ public class ConnectFourConsoleView implements Observer{
 		updateConnectFour();
 	}
 	
+	//print het spel
+	//weergeef wie er gewonnen heeft of gelijkspel als deze waardes true zijn
+	//anders vraag de input van een van de players
 	private void updateConnectFour() {
 		
 		printGame();
@@ -40,6 +46,10 @@ public class ConnectFourConsoleView implements Observer{
 		
 	}
 	
+	//print het spel
+	//loop door de grid en print een vakje, na iedere rij komt een nieuwe regel
+	//zet nummers onder het spel, zodat de gebruiker ziet welke kolom welk nummer is
+	//print twee nieuwe regels
 	private void printGame() {
 		System.out.println();
 		
@@ -58,6 +68,8 @@ public class ConnectFourConsoleView implements Observer{
 		System.out.println();
 	}
 	
+	//weergeef een vakje aan de hand van de status van dat vakje
+	//geef het vakje ook een standaard breedte.
 	private void displayVakje(int rij, int kolom) {
 		
 		switch(game.getStatusVanVakje(rij, kolom)) {
@@ -75,6 +87,12 @@ public class ConnectFourConsoleView implements Observer{
 		}
 	}
 	
+	//ontvang de input van een speler
+	//weergeef eerst welke speler er aan de buurt is, en maak een scanner om de input te lezen
+	//probeer dan de input te lezen en sla het op in kolom. mocht het verkeerd gaan, dan wordt de weergave van het spel gereset via updateconnectfour
+	//als de ingevulde waarde tussen het aantal kolommen is, doe insert muntje in het gameModel, anders weergeef een bericht dat het juiste getal ingevoert moet worden,
+	//en reset de weergave van het spel via updateconnectfour
+	//als laatste, sluit de scanner.
 	private void getInput() {
 		System.out.println(displayPlayer() +  "Geef een kolom: ");
 		Scanner scanner = new Scanner(System.in);
@@ -100,6 +118,7 @@ public class ConnectFourConsoleView implements Observer{
 		}
 	}
 	
+	//weergeef de speler aan de hand van welke speler er aan de buurt is
 	private String displayPlayer() {
 		String player = "x";
 		
@@ -117,10 +136,12 @@ public class ConnectFourConsoleView implements Observer{
 		return player;
 	}
 	
+	//geef aan welke speler gewonnen heeft
 	private void gewonnen() {
 		System.out.println(displayPlayer() + "heeft gewonnen!");
 	}
 	
+	//geef aan dat het gelijkspel is
 	private void gelijkspel() {
 		System.out.println("gelijkspel!");
 	}

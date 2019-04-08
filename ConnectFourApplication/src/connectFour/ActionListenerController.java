@@ -9,15 +9,20 @@ import connectFour.GameModel.status;
 
 public class ActionListenerController implements ActionListener {
 	
-	GameModel game;
-	ConnectFourPanel panel;
+	private GameModel game;
+	private ConnectFourPanel panel;
 	
 	//construct
+	//geef een panel en gamemodel mee zodat properties en functies van die classes bereikt kunnen worden
 	public ActionListenerController(ConnectFourPanel panel, GameModel game) {
 		this.game = game;
 		this.panel = panel;
 	}
 
+	//wordt uitgevoert als er op een knop gedrukt wordt.
+	//als gewonnen true is, restart het spel
+	//loop door het grid, wanneer we bij het vakje zijn waar op geklikt is, 
+	//insert muntje in het gameModel.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		

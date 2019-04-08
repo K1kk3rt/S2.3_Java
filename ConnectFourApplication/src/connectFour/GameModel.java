@@ -61,6 +61,8 @@ public class GameModel extends Observable{
 	
 	//construct
 	public GameModel() {
+		
+		//set variabelen
 		grid = new status[RIJEN][KOLOMMEN];
 		
 		ronde = 0;
@@ -68,13 +70,18 @@ public class GameModel extends Observable{
 		gelijkspel = false;
 		restart = false;
 		
+		//maak het spel klaar om te spelen
 		initGame();
 		
+		//maak een view
 		new ConnectFourGraphicView(this);
 		//new ConnectFourConsoleView(this);
 	}
 	
 	//methods
+	
+	//start het spel opnieuw. zet variabelen weer naar hun standaard waarden (behalve restart, deze moet true zijn).
+	//maak het spel daarna opnieuw klaar om te spelen, en update de view.
 	public void restartGame() {
 		restart = true;
 		gewonnen = false;
@@ -86,6 +93,7 @@ public class GameModel extends Observable{
 		notifyObservers();
 	}	
 	
+	//maak het spel klaar om te spelen. loop door de 2D array en zet de status op empty.
 	private void initGame() {
 		
 		for (int rij = 0; rij<grid.length; rij++){
@@ -95,6 +103,15 @@ public class GameModel extends Observable{
 		}
 	}
 	
+	//parameters: int kolom -> de kolom waar de speler een muntje in wilt gooien, status player -> de speler die het muntje er in gooit.
+	//doe een virtueel muntje in het spel. Zet restart op false, zodat het spel niet bij iedere zet opnieuw begint.
+	//de speler geeft een kolom op, dus moet de rij nog bepaalt worden (laagste vakje)
+	//als de rij en kolom groter of gelijk aan 0 zijn, geef een vakje de status van de speler die aan de buurt is.
+	//voeg 1 toe aan de ronde (wordt gebruikt om de speler die aan de buurt is te bepalen).
+	//bepaal of er vier op een rij is in alle richtingen, of dat er gelijk spel is.
+	//controlleer of er gewonnen is, haal 1 van ronde af zodat je juiste speler wordt weergeven bij winst.
+	//zet de huidige rij en kolom zodat alleen deze geupdate hoeft te worden en niet het hele spelbord vanuit de grafische view.
+	//update de view
 	public void insertMuntje(int kolom, status player) {
 		restart = false;
 		
@@ -123,6 +140,8 @@ public class GameModel extends Observable{
 		}
 	}
 	
+	//bepaal de onderste rij waar het muntje in zal vallen aan de hand van de kolom waar de speler op heeft geklikt.
+	//loop door de kolom van onderen (dus andersom). wanneer een vakje leeg is, is dat de onderste rij en wordt deze gereturnt.
 	private int bepaalRij(int kolom) {
 		int rij = 0;
 		
@@ -138,6 +157,10 @@ public class GameModel extends Observable{
 		return rij;
 	}
 	
+	//controleer of er vier op een rij is, horizontaal. dit aan de hand van voor welke speler er gecontroleert moet worden,
+	//en op welke rij. loop door de rij, als de status van een vakje gelijk is aan de speler voor wie er gecontroleert wordt, 
+	//verhoog het aantal met 1. als het aantal vier is hoeft er niet verder gecontroleert te worden en staat gewonnen op true.
+	//daar zullen andere methoden op reageren (zoals de view)
 	private void controleerHorizontaalWinst(status player, int rij) {
 		int aantal = 0;
 		
@@ -155,6 +178,10 @@ public class GameModel extends Observable{
 		}
 	}
 	
+	//controleer of er vier op een rij is, verticaal. dit aan de hand van voor welke speler er gecontroleert moet worden,
+	//en op welke kolom. loop door de kolom, als de status van een vakje gelijk is aan de speler voor wie er gecontroleert wordt, 
+	//verhoog het aantal met 1. als het aantal vier is hoeft er niet verder gecontroleert te worden en staat gewonnen op true.
+	//daar zullen andere methoden op reageren (zoals de view)
 	private void controleerVerticaalWinst(status player, int kolom) {
 		int aantal = 0;
 		
@@ -172,6 +199,12 @@ public class GameModel extends Observable{
 		}
 	}
 	
+	//controleer of er vier op een rij is, diagonaal naar rechts. dit aan de hand van voor welke speler er gecontroleert moet worden,
+	//en vanaf welke kolom en rij. loop door de kolom en rij aan de hand van de array offsetRight. in deze array staan alle locaties 
+	//die gecontroleert moeten worden voor vier op een rij voor diagonaal naar rechts.
+	//als de status van een vakje gelijk is aan de speler voor wie er gecontroleert wordt, 
+	//verhoog het aantal met 1. als het aantal vier is hoeft er niet verder gecontroleert te worden en staat gewonnen op true.
+	//daar zullen andere methoden op reageren (zoals de view)
 	private void controlleerDiagonaalWinstRechts(status player, int rij, int kolom) {
 		int aantal = 0;
 		
@@ -203,6 +236,12 @@ public class GameModel extends Observable{
 		}
 	}
 	
+	//controleer of er vier op een rij is, diagonaal naar links. dit aan de hand van voor welke speler er gecontroleert moet worden,
+	//en vanaf welke kolom en rij. loop door de kolom en rij aan de hand van de array offsetLeft. in deze array staan alle locaties 
+	//die gecontroleert moeten worden voor vier op een rij voor diagonaal naar rechts.
+	//als de status van een vakje gelijk is aan de speler voor wie er gecontroleert wordt, 
+	//verhoog het aantal met 1. als het aantal vier is hoeft er niet verder gecontroleert te worden en staat gewonnen op true.
+	//daar zullen andere methoden op reageren (zoals de view)
 	private void controlleerDiagonaalWinstLinks(status player, int rij, int kolom) {
 		int aantal = 0;
 		
@@ -234,6 +273,8 @@ public class GameModel extends Observable{
 		}
 	}
 	
+	//loop door de grid en controleer of alle vakjes niet leeg zijn.
+	//als dit zo is, zet gelijkspel op true. hier reageren andere methoden op zoals de view.
 	private void controlleerGelijkspel() {
 		int aantal = 0;
 		

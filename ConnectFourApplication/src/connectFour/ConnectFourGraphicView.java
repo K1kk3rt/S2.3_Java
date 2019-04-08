@@ -14,8 +14,8 @@ import connectFour.GameModel.status;
 
 public class ConnectFourGraphicView extends JFrame implements Observer{
 	
-	GameModel game;
-	ConnectFourPanel connectFourPanel;
+	private GameModel game;
+	private ConnectFourPanel connectFourPanel;
 	private JPanel topBar;
 	private JButton button1;
 	private JButton button2;
@@ -24,6 +24,10 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	private JLabel lblStatus;
 	
 	//construct
+	//start de weergave voor het window, geef een gamemodel mee zodat de methoden en properties van die klasse bereikbaar zijn
+	//maak een nieuw connectfour panel aan. hier wordt het spel zelf weergeven. geef een instantie van deze klasse en het gamemodel mee
+	//maak het window zelf, en vervolgens de top en bottom bar
+	//voeg deze view toe als observer zodat deze ook geupdate wordt als een speler een zet doet.
 	public ConnectFourGraphicView(GameModel game){
 		this.game = game;
 		
@@ -38,6 +42,7 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	}
 	
 	//implement interfaces
+	//update de tekst van het label in de onderste bar, en de kleur aan de hand van de speler die aan de buurt is.
 	@Override
 	public void update(Observable o, Object arg) {
 		lblStatus.setText(game.getPlayer() + " is aan de buurt!");
@@ -45,6 +50,8 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		
 	}
 	
+	//maak het window zelf
+	//zet de breedte en de hoogte, en de layout, en andere belangrijke eigenschappen van het window
 	private void createWindow() {
 		//determine width and height (so that buttons are square)
 		int width = connectFourPanel.getButtonWidth() * game.getKolommen();
@@ -69,7 +76,8 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 
 		setVisible(true);
 	}
-
+	
+	//maak en vul de topbar met buttons
 	private void createTopBar() {
 		topBar = new JPanel();
 		
@@ -91,6 +99,8 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		add(topBar, BorderLayout.PAGE_START);
 	}
 	
+	//maak de bottombar en vul deze met een label
+	//geef de bar ook een kleur
 	private void createBottomBar() {
 		bottomBar = new JPanel();
 		
@@ -106,14 +116,18 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		add(bottomBar, BorderLayout.PAGE_END);
 	}
 	
+	//geef aan als er een speler gewonnen heeft in het label van de bottom bar
 	public void setLabelGewonnen() {
 		lblStatus.setText(game.getPlayer() + " heeft gewonnen!");
 	}
 	
+	//geef aan als er gelijkspel is in het label van de bottom bar
 	public void setLabelGelijkspel() {
 		lblStatus.setText("Gelijkspel!");
 	}
 	
+	//bepaal de kleur van de onderste bar aan de hand van de speler die aan de buurt is
+	//de kleuren zijn gebaseerd op de kleuren van de muntjes van de spelers.
 	private void setBottomBarColor() {
 		//player1 #80D5FF
 		//player2 #006597

@@ -37,6 +37,11 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	}
 	
 	//construct
+	//geef de graphic view en gamemodel game mee zodat deze methoden en properties bereikt kunnen worden
+	//voeg het panel toe als observer, zodat deze geupdate wordt als een speler een zet doet.
+	//maak een grid van jbuttons aan de hand van het aantal rijen en kolommen in gamemodel
+	//laad de afbeeldingen zodat deze in de hele class gebruikt kunnen worden en maar 1 keer geladen hoeven worden
+	//maar het spel klaar om gespeeld te worden
 	public ConnectFourPanel(ConnectFourGraphicView view, GameModel game) {
 		
 		//set layout
@@ -54,6 +59,7 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	}
 	
 	//implement interfaces
+	//weergeef het spel op het moment dat een speler een zet doet
 	@Override
 	public void update(Observable o, Object arg) {
 		
@@ -61,6 +67,9 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		
 	}
 	
+	//maak de weergave van het spel klaar om te spelen
+	//loop door de jbutton grid en maak een nieuwe jbutton aan. bepaal dan de achtergrond en zet een actionlistener voor het klikken.
+	//voeg de button toe aan het grid
 	private void initGame() {
 		
 		for (int rij = 0; rij<grid.length; rij++){
@@ -73,6 +82,8 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		}
 	}
 	
+	//bepaal de achtergrond van een button aan de hand van de status van die locatie in het grid
+	//de parameters rij en kolom geven aan van welke button de achtergrond verandert moet worden
 	private void setButtonBackground(int rij, int kolom) {
 		
 		grid[rij][kolom].setBorder(null);
@@ -92,6 +103,8 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		}
 	}
 	
+	//laad de afbeeldingen voor op de achtergrond van de buttons en sla deze op in variabelen in de klasse. 
+	//vang errors op met de try catch
 	private void laadAfbeeldingen() {
 		try {
 			Image leeg = ImageIO.read(new FileInputStream("src/assets/cell_empty.png"));
@@ -106,6 +119,9 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		}
 	}
 	
+	//weergeef het spel aan de hand van de status van de huidige rij en kolom
+	//op deze manier hoeft er 1 jbutton verandert te worden, en niet allemaal.
+	//zet de buttonbackground, en controleer aan de hand van bepaald variablen of er nog andere dingen moeten gebeuren.
 	private void displayGame() {
 		int rij = game.getCurrentRij();
 		int kolom = game.getCurrentKolom();
@@ -123,14 +139,18 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		}
 	}
 	
+	//geef aan wie er gewonnen heeft
 	private void gewonnen() {
 		view.setLabelGewonnen();
 	}
 	
+	//geef aan of het gelijkspel is
 	private void gelijkspel() {
 		view.setLabelGelijkspel();
 	}
 	
+	
+	//restart de weergave van het spel. zet de achtergrond van alle buttons weer op "leeg"
 	private void restart() {
 		for (int rij = 0; rij<grid.length; rij++){
 		     for (int kolom = 0; kolom<grid[rij].length; kolom++){
