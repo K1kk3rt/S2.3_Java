@@ -3,14 +3,14 @@ package connectFour;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ActionListenerController implements ActionListener {
+public class ActionListenerGameController implements ActionListener {
 	
 	private GameModel game;
 	private ConnectFourPanel panel;
 	
 	//construct
 	//geef een panel en gamemodel mee zodat properties en functies van die classes bereikt kunnen worden
-	public ActionListenerController(ConnectFourPanel panel, GameModel game) {
+	public ActionListenerGameController(ConnectFourPanel panel, GameModel game) {
 		this.game = game;
 		this.panel = panel;
 	}

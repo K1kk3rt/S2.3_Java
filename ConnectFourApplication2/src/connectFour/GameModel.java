@@ -1,6 +1,14 @@
 package connectFour;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Observable;
+import java.util.Scanner;
 
 public class GameModel extends Observable{
 	
@@ -86,6 +94,7 @@ public class GameModel extends Observable{
 		restart = true;
 		gewonnen = false;
 		gelijkspel = false;
+		ronde = 0;
 		
 		initGame();
 		
@@ -273,24 +282,121 @@ public class GameModel extends Observable{
 		}
 	}
 	
-	//loop door de grid en controleer of alle vakjes niet leeg zijn.
-	//als dit zo is, zet gelijkspel op true. hier reageren andere methoden op zoals de view.
+	//als de ronde gelijk is aan het aantal rijen keer het aantal kolommen zijn alle vakjes gevult
 	private void controlleerGelijkspel() {
-		int aantal = 0;
-		
-		for (int rij = 0; rij<grid.length; rij++){
-		     for (int kolom = 0; kolom<grid[rij].length; kolom++){
-		    	 if(grid[rij][kolom] != status.isEmpty) {
-		    		 aantal++;
-		    	 }
-		    	 
-		     }
-		}
-		
-		if(aantal == RIJEN*KOLOMMEN) {
+		if(ronde == RIJEN*KOLOMMEN) {
 			gelijkspel = true;
 		}
 	}
 	
+	public void saveGameToFile() {
+		int[][] intGrid = convertEnumGridToIntGrid(grid);
+		System.out.println(Arrays.deepToString(intGrid));
+		
+		try {
+			BufferedWriter outputWriter = new BufferedWriter(new FileWriter("connectfour.txt"));
+			
+			for (int rij = 0; rij<grid.length; rij++){
+				for (int kolom = 0; kolom<grid[rij].length; kolom++){
+					outputWriter.write(Integer.toString(intGrid[rij][kolom]) + " ");
+				}
+				outputWriter.newLine();
+			}
+			
+			//save ronde in file
+			outputWriter.newLine();
+			outputWriter.write(Integer.toString(ronde));
+			
+			outputWriter.flush();  
+			outputWriter.close(); 
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	private int[][] convertEnumGridToIntGrid(status[][] enumgrid){
+		
+		int[][] intGrid = new int[enumgrid.length][enumgrid[0].length];
+		
+		for (int rij = 0; rij<enumgrid.length; rij++){
+		     for (int kolom = 0; kolom<enumgrid[rij].length; kolom++){
+		    	 switch(enumgrid[rij][kolom]) {
+		    	  case isEmpty:
+		    	    intGrid[rij][kolom] = 1;
+		    	    break;
+		    	  case player1:
+		    		  intGrid[rij][kolom] = 2;
+		    	    break;
+		    	  case player2:
+		    		  intGrid[rij][kolom] = 3;
+		    	    break;
+		    	  default:
+		    	    // code block
+		    	}
+		     }
+		}
+		
+		return intGrid;
+	}
+	
+	public void loadGameFromFile() {
+		
+		try {
+			int[][] a = new int[RIJEN][KOLOMMEN];
+			Scanner input = new Scanner(new File("connectfour.txt"));
+			for(int rij = 0; rij < RIJEN; rij++)
+			{
+			    for(int kolom = 0; kolom < KOLOMMEN; kolom++)
+			    {
+			        if(input.hasNextInt())
+			        {
+			            a[rij][kolom] = input.nextInt();
+			        }
+			    }
+			}
+			
+			//lees ronde from file
+			if(input.hasNextInt()) {
+				ronde = input.nextInt();
+			}
+			
+			convertIntGridToGameGrid(a);
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private void convertIntGridToGameGrid(int[][] intGrid) {
+		
+		if(intGrid.length == RIJEN) {
+			for (int rij = 0; rij<intGrid.length; rij++){
+				if(intGrid[rij].length == KOLOMMEN) {
+					for (int kolom = 0; kolom<intGrid[rij].length; kolom++){
+						switch(intGrid[rij][kolom]) {
+						case 1:
+							grid[rij][kolom] = status.isEmpty;
+							break;
+						case 2:
+							grid[rij][kolom] = status.player1;
+							break;
+						case 3:
+							grid[rij][kolom] = status.player2;
+							break;
+						default:
+							// code block
+						}
+					}
+					
+				}
+			}
+		}
+		restart =  true;
+		
+		setChanged();
+		notifyObservers();
+		
+	}
 	
 }

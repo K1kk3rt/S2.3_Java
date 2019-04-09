@@ -2,7 +2,6 @@ package connectFour;
 
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Observable;
@@ -10,8 +9,6 @@ import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-import connectFour.GameModel.status;
 
 public class ConnectFourPanel extends JPanel implements Observer{
 	
@@ -107,9 +104,9 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	//vang errors op met de try catch
 	private void laadAfbeeldingen() {
 		try {
-			Image leeg = ImageIO.read(new FileInputStream("src/assets/cell_empty.png"));
-			Image speler1 = ImageIO.read(new FileInputStream("src/assets/cell_player2.png"));
-			Image speler2 = ImageIO.read(new FileInputStream("src/assets/cell_player1.png"));
+			Image leeg = ImageIO.read(getClass().getResource("/assets/cell_empty.png"));
+			Image speler1 = ImageIO.read(getClass().getResource("/assets/cell_player2.png"));
+			Image speler2 = ImageIO.read(getClass().getResource("/assets/cell_player1.png"));
 			
 			afbSpeler1 = speler1.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
 			afbSpeler2 = speler2.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);

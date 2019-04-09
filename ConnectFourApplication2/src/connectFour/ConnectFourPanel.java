@@ -73,7 +73,7 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		     for (int kolom = 0; kolom<grid[rij].length; kolom++){
 		    	 grid[rij][kolom] = new JButton();
 		    	 setButtonBackground(rij, kolom);
-		    	 grid[rij][kolom].addActionListener(new ActionListenerController(this, this.game));
+		    	 grid[rij][kolom].addActionListener(new ActionListenerGameController(this, this.game));
 		    	 add(grid[rij][kolom]);
 		     }
 		}

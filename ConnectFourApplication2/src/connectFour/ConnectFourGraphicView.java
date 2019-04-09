@@ -16,11 +16,16 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	private GameModel game;
 	private ConnectFourPanel connectFourPanel;
 	private JPanel topBar;
-	private JButton button1;
-	private JButton button2;
-	private JButton button3;
+	private JButton save;
+	private JButton load;
+	private JButton reset;
 	private JPanel bottomBar;
 	private JLabel lblStatus;
+	
+	//getters
+	public JButton getSaveButton() {return save;}
+	public JButton getLoadButton() {return load;}
+	public JButton getResetButton() {return reset;}
 	
 	//construct
 	//start de weergave voor het window, geef een gamemodel mee zodat de methoden en properties van die klasse bereikbaar zijn
@@ -80,19 +85,22 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	private void createTopBar() {
 		topBar = new JPanel();
 		
-		button1 = new JButton();
-		button2 = new JButton();
-		button3 = new JButton();
+		save = new JButton();
+		save.addActionListener(new ActionListenerButtonController(this, game));
+		load = new JButton();
+		load.addActionListener(new ActionListenerButtonController(this, game));
+		reset = new JButton();
+		reset.addActionListener(new ActionListenerButtonController(this, game));
 		
 		//set button tekst
-		button1.setText("button1");
-		button2.setText("button2");
-		button3.setText("button3");
+		save.setText("save");
+		load.setText("load");
+		reset.setText("reset");
 		
 		//add buttons to top bar
-		topBar.add(button1);
-		topBar.add(button2);
-		topBar.add(button3);
+		topBar.add(save);
+		topBar.add(load);
+		topBar.add(reset);
 		
 		//add top bar to main window
 		add(topBar, BorderLayout.PAGE_START);
