@@ -1,13 +1,12 @@
 package connectFour;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class ConnectFourPanel extends JPanel implements Observer{
@@ -20,6 +19,8 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	private Image afbLeeg;
 	private Image afbSpeler1;
 	private Image afbSpeler2;
+	private Color speler1kleur;
+	private Color speler2kleur;
 	
 	
 	//getters
@@ -31,6 +32,12 @@ public class ConnectFourPanel extends JPanel implements Observer{
 	}
 	public JButton[][] getButtonGrid(){
 		return grid;
+	}
+	public Color getSpeler1Kleur() {
+		return speler1kleur;
+	}
+	public Color getSpeler2Kleur() {
+		return speler2kleur;
 	}
 	
 	//construct
@@ -100,20 +107,14 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		}
 	}
 	
-	//laad de afbeeldingen voor op de achtergrond van de buttons en sla deze op in variabelen in de klasse. 
-	//vang errors op met de try catch
+	//laad de kleuren voor op de afbeeldingen voor op de achtergrond van de buttons en sla deze op in variabelen in de klasse. 
 	private void laadAfbeeldingen() {
-		try {
-			Image leeg = ImageIO.read(getClass().getResource("/assets/cell_empty.png"));
-			Image speler1 = ImageIO.read(getClass().getResource("/assets/cell_player2.png"));
-			Image speler2 = ImageIO.read(getClass().getResource("/assets/cell_player1.png"));
 			
-			afbSpeler1 = speler1.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
-			afbSpeler2 = speler2.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
-			afbLeeg = leeg.getScaledInstance(BUTTONWIDTH, BUTTONHEIGHT,  java.awt.Image.SCALE_SMOOTH);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			kiesKleurVakjes();
+			
+			afbSpeler1 = maakVakje(speler1kleur);
+			afbSpeler2 = maakVakje(speler2kleur);
+			afbLeeg = maakVakje(Color.WHITE);
 	}
 	
 	//weergeef het spel aan de hand van de status van de huidige rij en kolom
@@ -154,6 +155,25 @@ public class ConnectFourPanel extends JPanel implements Observer{
 		    	 setButtonBackground(rij, kolom);
 		     }
 		}
+	}
+	
+	//vraag de speler om de kleur die hij wilt zijn, en sla dit op
+	public void kiesKleurVakjes() {
+        speler1kleur = JColorChooser.showDialog(null, "Speler1: Kies een kleur om mee te spelen", getBackground());
+        do {
+        	speler2kleur = JColorChooser.showDialog(null, "Speler1: Kies een kleur om mee te spelen", getBackground());
+        }
+        while(speler1kleur == speler2kleur);
+	}
+	
+
+	//maak aan de hand van de gekozen kleuren de vakjes 
+	private BufferedImage maakVakje(Color kleur) {
+		BufferedImage rondAfb = new BufferedImage(BUTTONWIDTH, BUTTONHEIGHT, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) rondAfb.createGraphics();
+		g.setColor(kleur);
+		g.fillOval(15, 15, 70, 70);
+		return rondAfb;
 	}
 	
 }

@@ -357,6 +357,7 @@ public class GameModel extends Observable{
 			setChanged();
 			notifyObservers();
 			
-		}
+	}
+	
 	
 }

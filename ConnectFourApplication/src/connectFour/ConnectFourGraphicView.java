@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -31,7 +32,8 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	//construct
 	//start de weergave voor het window, geef een gamemodel mee zodat de methoden en properties van die klasse bereikbaar zijn
 	//maak een nieuw connectfour panel aan. hier wordt het spel zelf weergeven. geef een instantie van deze klasse en het gamemodel mee
-	//maak het window zelf, en vervolgens de top en bottom bar
+	//maak een aantal onderdelen en stel instellingen in via methodes. geef labels een waarde via methodes
+	//start de timer
 	//voeg deze view toe als observer zodat deze ook geupdate wordt als een speler een zet doet.
 	public ConnectFourGraphicView(GameModel game){
 		this.game = game;
@@ -46,6 +48,9 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		setCloseOperation();
 		showDialogAtOpen();
 		
+		setLabelTijd(timerController.getMinutes(),timerController.getSeconds());
+		setLabelAantalFishes();
+		
 		//start timer
 		Timer tick = new Timer(1000, timerController);
         tick.start();
@@ -56,6 +61,7 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	
 	//implement interfaces
 	//update de tekst van het label in de onderste bar, en de kleur aan de hand van de speler die aan de buurt is.
+	//update het aantal fishes
 	@Override
 	public void update(Observable o, Object arg) {
 		lblStatus.setText(game.getPlayer() + " is aan de buurt!");
@@ -89,6 +95,10 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		setVisible(true);
 	}
 	
+	//maak een popup die komt als de applicatie gesloten wordt.
+	//ja is opslaan en dan afsluiten
+	//nee is afsluiten zonder op te slaan
+	//cancel is niks doen
 	private void setCloseOperation() {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
@@ -98,7 +108,7 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 			  public void windowClosing(WindowEvent we)
 			  { 
 			    String ObjButtons[] = {"Ja","Nee", "Cancel"};
-			    int PromptResult = JOptionPane.showOptionDialog(null, "Moet het spel worden opgeslagen", "ConnectFour", 
+			    int PromptResult = JOptionPane.showOptionDialog(null, "Moet het spel worden opgeslagen?", "ConnectFour", 
 			    		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
 			    		ObjButtons,ObjButtons[1]);
 			    if(PromptResult==0)
@@ -140,7 +150,7 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		add(topBar, BorderLayout.PAGE_START);
 	}
 	
-	//maak de bottombar en vul deze met een label
+	//maak de bottombar en vul deze met labels
 	//geef de bar ook een kleur
 	private void createBottomBar() {
 		bottomBar = new JPanel(new BorderLayout());
@@ -166,6 +176,9 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		add(bottomBar, BorderLayout.PAGE_END);
 	}
 	
+	//deze popup wordt weergeven bij het openen van de applicatie wanneer er een savegame is
+	//ja: er wordt een opgeslagen spel geladen
+	//nee: er wordt een nieuw spel geladen (standaard)
 	private void showDialogAtOpen() {
 		
 		if(fileController.checkIfSaveGameExists()) {
@@ -202,8 +215,8 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		//player1 #80D5FF
 		//player2 #006597
 		
-		Color player1 = new Color(128,213,255);
-		Color player2 = new Color(0,101,151);
+		Color player1 = connectFourPanel.getSpeler1Kleur();
+		Color player2 = connectFourPanel.getSpeler2Kleur();
 		
 		if(game.getPlayer() == status.player1) {
 			bottomBar.setBackground(player2);
@@ -214,10 +227,12 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		
 	}
 	
+	//geef aan de hand van de ronde het aantal fishes
 	private void setLabelAantalFishes() {
 		lblRonde.setText(game.getRonde() + " fishes");
 	}
 	
+	//weergeef de tijd
 	public void setLabelTijd(int minuten, int seconden) {
 		lblTijd.setText("verstreken tijd: " + minuten + ":" + seconden);
 	}

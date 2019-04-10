@@ -3,6 +3,7 @@ package connectFour;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class FileController {
@@ -22,6 +23,8 @@ public class FileController {
 	
 	
 	//methods
+	//loop door het grid en sla het op als integers in een txt bestand
+	//sla ook de ronde, aantal seconden en minuten op
 	public void saveGameToFile() {
 		int[][] intGrid = game.convertEnumGridToIntGrid(game.getGrid());
 		
@@ -55,6 +58,7 @@ public class FileController {
 		}
 	}
 	
+	//controleer of er een opgeslagen bestand is
 	public boolean checkIfSaveGameExists() {
 		boolean exists = false;
 		
@@ -81,23 +85,24 @@ public class FileController {
 					        }
 					    }
 					}
+					System.out.println(Arrays.deepToString(a));
+					game.convertIntGridToGameGrid(a);
 					
 					//lees ronde from file
 					if(input.hasNextInt()) {
-						game.setRonde(input.nextInt());
-					}
-					
-					//lees seconden from file
-					if(input.hasNextInt()) {
-						timer.setSeconds(input.nextInt());
+						game.setRonde(Integer.parseInt(input.next()));
 					}
 					
 					//lees minuten from file
 					if(input.hasNextInt()) {
-						timer.setMinutes(input.nextInt());
+						timer.setMinutes(Integer.parseInt(input.next()));
 					}
 					
-					game.convertIntGridToGameGrid(a);
+					//lees seconden from file
+					if(input.hasNextInt()) {
+						timer.setSeconds(Integer.parseInt(input.next()));
+					}
+					
 					
 					input.close();
 				}
