@@ -58,6 +58,9 @@ public class GameModel extends Observable{
 	public int getCurrentKolom() {
 		return currentKolom;
 	}
+	public int getRonde() {
+		return ronde;
+	}
 	
 	//construct
 	public GameModel() {

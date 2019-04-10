@@ -21,6 +21,8 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	private JButton button3;
 	private JPanel bottomBar;
 	private JLabel lblStatus;
+	private JLabel lblRonde;
+	private JLabel lblTijd;
 	
 	//construct
 	//start de weergave voor het window, geef een gamemodel mee zodat de methoden en properties van die klasse bereikbaar zijn
@@ -36,6 +38,10 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		createTopBar();
 		createBottomBar();
 		
+		//start timer
+		Timer tick = new Timer(1000, new TimerController(game, this));
+        tick.start();
+		
 		game.addObserver(this);
 		
 	}
@@ -46,7 +52,7 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	public void update(Observable o, Object arg) {
 		lblStatus.setText(game.getPlayer() + " is aan de buurt!");
 		setBottomBarColor();
-		
+		setLabelAantalFishes();
 	}
 	
 	//maak het window zelf
@@ -101,15 +107,24 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	//maak de bottombar en vul deze met een label
 	//geef de bar ook een kleur
 	private void createBottomBar() {
-		bottomBar = new JPanel();
+		bottomBar = new JPanel(new BorderLayout());
 		
 		lblStatus = new JLabel();
 		lblStatus.setText("player 1 is aan de buurt!");
+		lblStatus.setHorizontalAlignment(JLabel.CENTER);
+		
+		lblRonde = new JLabel();
+		lblRonde.setText("0 fishes");
+		
+		lblTijd = new JLabel();
+		lblTijd.setText("verstreken tijd: ");
 		
 		setBottomBarColor();
 		
 		//add label to panel
-		bottomBar.add(lblStatus);
+		bottomBar.add(lblStatus, BorderLayout.CENTER);
+		bottomBar.add(lblRonde, BorderLayout.LINE_START);
+		bottomBar.add(lblTijd, BorderLayout.LINE_END);
 		
 		//add panel to main window
 		add(bottomBar, BorderLayout.PAGE_END);
@@ -143,4 +158,11 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		
 	}
 	
+	private void setLabelAantalFishes() {
+		lblRonde.setText(game.getRonde() + " fishes");
+	}
+	
+	public void setLabelTijd(int minuten, int seconden) {
+		lblTijd.setText("verstreken tijd: " + minuten + ":" + seconden);
+	}
 }
