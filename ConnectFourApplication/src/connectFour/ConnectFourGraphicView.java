@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,6 +17,8 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 	
 	private GameModel game;
 	private ConnectFourPanel connectFourPanel;
+	private FileController fileController;
+	private TimerController timerController;
 	private JPanel topBar;
 	private JButton button1;
 	private JButton button2;
@@ -33,13 +37,17 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		this.game = game;
 		
 		connectFourPanel = new ConnectFourPanel(this, this.game);
+		timerController = new TimerController(game, this);
+		fileController = new FileController(game, timerController);
 		
 		createWindow();
 		createTopBar();
 		createBottomBar();
+		setCloseOperation();
+		showDialogAtOpen();
 		
 		//start timer
-		Timer tick = new Timer(1000, new TimerController(game, this));
+		Timer tick = new Timer(1000, timerController);
         tick.start();
 		
 		game.addObserver(this);
@@ -73,13 +81,41 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		setLocation(xPos, yPos);
 
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Connect Four");
 		
 		//add panel to main window
 		add(connectFourPanel, BorderLayout.CENTER);
 
 		setVisible(true);
+	}
+	
+	private void setCloseOperation() {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		addWindowListener(new WindowAdapter() {
+
+			  @Override
+			  public void windowClosing(WindowEvent we)
+			  { 
+			    String ObjButtons[] = {"Ja","Nee", "Cancel"};
+			    int PromptResult = JOptionPane.showOptionDialog(null, "Moet het spel worden opgeslagen", "ConnectFour", 
+			    		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+			    		ObjButtons,ObjButtons[1]);
+			    if(PromptResult==0)
+			    {
+			    	//ja
+			    	fileController.saveGameToFile();
+			    	System.exit(0);
+			    }
+			    if(PromptResult==1) {
+			    	//nee
+			    	System.exit(0);          			    	
+			    }
+			    if(PromptResult==2) {
+			    	//cancel
+			    }
+			  }
+		});
 	}
 	
 	//maak en vul de topbar met buttons
@@ -128,6 +164,26 @@ public class ConnectFourGraphicView extends JFrame implements Observer{
 		
 		//add panel to main window
 		add(bottomBar, BorderLayout.PAGE_END);
+	}
+	
+	private void showDialogAtOpen() {
+		
+		if(fileController.checkIfSaveGameExists()) {
+			String ObjButtons[] = {"Ja","Nee"};
+			int PromptResult = JOptionPane.showOptionDialog(null, "Er is een opgeslagen spel, moet deze hervat worden?", "ConnectFour", 
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+					ObjButtons,ObjButtons[1]);
+			if(PromptResult==0)
+			{
+				//ja: laad het spel en start daarmee
+				fileController.loadGameFromFile();
+
+			}
+			if(PromptResult==1) {
+				//nee: laad nieuw spel 
+        			    	
+			}
+		}
 	}
 	
 	//geef aan als er een speler gewonnen heeft in het label van de bottom bar

@@ -67,6 +67,11 @@ public class GameModel extends Observable{
 		return currentKolom;
 	}
 	
+	//setters
+	public void setRonde(int r) {
+		ronde = r;
+	}
+	
 	//construct
 	public GameModel() {
 		
@@ -362,6 +367,8 @@ public class GameModel extends Observable{
 			}
 			
 			convertIntGridToGameGrid(a);
+			
+			input.close();
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());

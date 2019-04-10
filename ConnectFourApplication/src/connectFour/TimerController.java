@@ -10,6 +10,22 @@ public class TimerController implements ActionListener{
 	private ConnectFourGraphicView view;
 	private int seconds;
 	private int minutes;
+	
+	//getters
+	public int getSeconds() {
+		return seconds;
+	}
+	public int getMinutes() {
+		return minutes;
+	}
+	
+	//setters
+	public void setSeconds(int s) {
+		seconds = s;
+	}
+	public void setMinutes(int m) {
+		minutes = m;
+	}
 
 	//construct
 	public TimerController(GameModel model, ConnectFourGraphicView view) {
@@ -18,10 +34,6 @@ public class TimerController implements ActionListener{
 		this.view = view;
 		seconds = 0;
 		minutes = 0;
-		
-	}
-	
-	public void startTimer() {
 		
 	}
 

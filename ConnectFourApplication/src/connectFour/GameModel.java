@@ -2,6 +2,8 @@ package connectFour;
 
 import java.util.Observable;
 
+import connectFour.GameModel.status;
+
 public class GameModel extends Observable{
 	
 	//fields
@@ -61,6 +63,12 @@ public class GameModel extends Observable{
 	public int getRonde() {
 		return ronde;
 	}
+	
+	//setters
+	public void setRonde(int r) {
+		ronde = r;
+	}
+	
 	
 	//construct
 	public GameModel() {
@@ -295,5 +303,60 @@ public class GameModel extends Observable{
 		}
 	}
 	
+	public int[][] convertEnumGridToIntGrid(status[][] enumgrid){
+			
+			int[][] intGrid = new int[enumgrid.length][enumgrid[0].length];
+			
+			for (int rij = 0; rij<enumgrid.length; rij++){
+			     for (int kolom = 0; kolom<enumgrid[rij].length; kolom++){
+			    	 switch(enumgrid[rij][kolom]) {
+			    	  case isEmpty:
+			    	    intGrid[rij][kolom] = 1;
+			    	    break;
+			    	  case player1:
+			    		  intGrid[rij][kolom] = 2;
+			    	    break;
+			    	  case player2:
+			    		  intGrid[rij][kolom] = 3;
+			    	    break;
+			    	  default:
+			    	    // code block
+		    	}
+		     }
+		}
+		
+		return intGrid;
+	}
+	
+	public void convertIntGridToGameGrid(int[][] intGrid) {
+			
+			if(intGrid.length == RIJEN) {
+				for (int rij = 0; rij<intGrid.length; rij++){
+					if(intGrid[rij].length == KOLOMMEN) {
+						for (int kolom = 0; kolom<intGrid[rij].length; kolom++){
+							switch(intGrid[rij][kolom]) {
+							case 1:
+								grid[rij][kolom] = status.isEmpty;
+								break;
+							case 2:
+								grid[rij][kolom] = status.player1;
+								break;
+							case 3:
+								grid[rij][kolom] = status.player2;
+								break;
+							default:
+								// code block
+							}
+						}
+						
+					}
+				}
+			}
+			restart =  true;
+			
+			setChanged();
+			notifyObservers();
+			
+		}
 	
 }
