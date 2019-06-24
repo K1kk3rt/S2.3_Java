@@ -3,6 +3,8 @@ package nl.inholland;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -74,8 +76,14 @@ public class GraphicView extends JFrame implements Observer{
 		button2 = new JButton();
 		
 		//set button tekst
-		resetButton.setText("reset");
+		resetButton.setText("Reset");
 		button2.setText("button2");
+		
+		resetButton.addActionListener(new ActionListener() { 
+		    public void actionPerformed(ActionEvent e) { 
+		        showDialogReset();
+		    } 
+		});
 		
 		//add buttons to top bar
 		topBar.add(resetButton);
@@ -128,6 +136,23 @@ public class GraphicView extends JFrame implements Observer{
 			//no: close game
 			System.exit(0);
     			    	
+		}
+	}
+	
+	public void showDialogReset() {
+		String ObjButtons[] = {"Yes","No"};
+		int PromptResult = JOptionPane.showOptionDialog(null, "Are you sure you want to reset the game?", "SlidePuzzle", 
+				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+				ObjButtons,ObjButtons[1]);
+		if(PromptResult==0)
+		{
+			//yes: restart
+			game.restartGame();
+
+		}
+		if(PromptResult==1) {
+			//no: close dialog
+			    			    	
 		}
 	}
 
