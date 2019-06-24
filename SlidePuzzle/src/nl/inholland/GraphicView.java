@@ -3,6 +3,8 @@ package nl.inholland;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,6 +18,7 @@ public class GraphicView extends JFrame implements Observer{
 	
 	private GameModel game;
 	private PanelView panel;
+	private SaveLoadController saveLoadController;
 		
 	private JPanel topBar;
 	private JButton resetButton;
@@ -30,6 +33,7 @@ public class GraphicView extends JFrame implements Observer{
 		this.game = game;
 		
 		panel = new PanelView(this.game, this);
+		saveLoadController = new SaveLoadController(game, this, panel);
 		
 		createWindow();
 		createTopBar();
@@ -58,7 +62,10 @@ public class GraphicView extends JFrame implements Observer{
 
 		setResizable(false);
 		setTitle("Slide Puzzle");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setCloseOperation();
+				
+		//show save game dialog at launch
+		showDialogAtOpen();
 		
 		//add panel to main window
 		add(panel, BorderLayout.CENTER);
@@ -130,13 +137,61 @@ public class GraphicView extends JFrame implements Observer{
     			    	
 		}
 	}
+	
+	private void setCloseOperation() {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		addWindowListener(new WindowAdapter() {
+
+			  @Override
+			  public void windowClosing(WindowEvent we)
+			  { 
+			    String ObjButtons[] = {"Yes","No", "Cancel"};
+			    int PromptResult = JOptionPane.showOptionDialog(null, "Do you want to save the game?", "SlidePuzzle", 
+			    		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+			    		ObjButtons,ObjButtons[1]);
+			    if(PromptResult==0)
+			    {
+			    	//yes
+			    	saveLoadController.saveGame();
+			    	System.exit(0);
+			    }
+			    if(PromptResult==1) {
+			    	//no
+			    	System.exit(0);          			    	
+			    }
+			    if(PromptResult==2) {
+			    	//cancel
+			    }
+			  }
+		});
+	}
+	
+	private void showDialogAtOpen() {
+			
+	if(saveLoadController.checkIfSaveGameExists()) {
+		String ObjButtons[] = {"Ja","Nee"};
+		int PromptResult = JOptionPane.showOptionDialog(null, "A saved game was found, do you want to load it?", "SlidePuzzle", 
+		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+		ObjButtons,ObjButtons[1]);
+		if(PromptResult==0)
+		{
+			//yes: load saved game
+			saveLoadController.loadGame();
+		}
+		if(PromptResult==1) {
+			//nee: no load new game
+	    			    	
+			}
+		}
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		updateLabels();
 	}
 	
-	private void updateLabels() {
+	public void updateLabels() {
 		//update labels
 		label1.setText("correct Tiles: " + game.getCorrectTiles());
 		label2.setText("Slides: " + game.getSlides());

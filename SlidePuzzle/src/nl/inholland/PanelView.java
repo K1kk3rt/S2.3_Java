@@ -68,7 +68,7 @@ public class PanelView extends JPanel implements Observer{
 		}
 	}
 	
-	private void loadImages() {
+	public void loadImages() {
 		try {
 			int[][] numMatrix = game.getMatrix();
 			int length = game.getMATRIX();

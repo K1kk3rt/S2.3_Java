@@ -1,13 +1,18 @@
 package nl.inholland;
 
+import java.io.Serializable;
 import java.util.Observable;
 import java.util.Random;
+import java.lang.StringBuffer;
 
-public class GameModel extends Observable{
+public class GameModel extends Observable implements Serializable{
+	
+	//default serialVersion id
+    private static final long serialVersionUID = 1L;
 	
 	
 	private final int MATRIX = 4;
-	public int[][] matrix;
+	private int[][] matrix;
 	private boolean gameStarted;
 	private boolean gameWon;
 	private int correctTiles;
@@ -47,9 +52,11 @@ public class GameModel extends Observable{
 	public int getMATRIX() {
 		return MATRIX;
 	}
-	
 	public int[][] getMatrix() {
 		return matrix;
+	}
+	public boolean getGameStarted() {
+		return gameStarted;
 	}
 	public boolean getGameWon() {
 		return gameWon;
@@ -64,6 +71,18 @@ public class GameModel extends Observable{
 	//setters
 	public void setMatrix(int[][] matrix) {
 		this.matrix = matrix;
+	}
+	public void setGameStarted(boolean gameStarted) {
+		this.gameStarted = gameStarted;
+	}
+	public void setGameWon(boolean gameWon) {
+		this.gameWon = gameWon;
+	}
+	public void setCorrectTiles(int correctTiles) {
+		this.correctTiles = correctTiles;
+	}
+	public void setSlides(int slides) {
+		this.slides = slides;
 	}
 
 	//methods
@@ -289,7 +308,14 @@ public class GameModel extends Observable{
 		}
 	}
 	
-	
+	@Override
+    public String toString() {
+        return new StringBuffer("gameStarted: " + String.valueOf(this.gameStarted))
+                .append("gameWon: " + String.valueOf(this.gameWon))
+                .append("correctTiles: " + Integer.toString(this.correctTiles))
+                .append("slides: " + Integer.toString(this.slides))
+                .append("matrix: ").append(this.matrix).toString();
+    }
 	
 	
 
