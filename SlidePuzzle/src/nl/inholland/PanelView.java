@@ -17,7 +17,7 @@ public class PanelView extends JPanel implements Observer{
 	private GameModel game;
 	private GraphicView view;
 	
-	private final int BUTTONSIZE = 270;
+	private final int BUTTONSIZE = 200;
 	
 	private JButton[][] matrix;
 
@@ -79,10 +79,10 @@ public class PanelView extends JPanel implements Observer{
 			    	 int tile = numMatrix[row][col];
 			    	 BufferedImage image;
 			    	 if(tile == 0) {
-			    		 image = ImageIO.read(getClass().getResource("/assets/imageEmpty.png"));
+			    		 image = ImageIO.read(getClass().getResource("/assets/imageEmpty.jpg"));
 			    	 }
 			    	 else {
-			    		 image = ImageIO.read(getClass().getResource("/assets/image"+ tile +".png"));
+			    		 image = ImageIO.read(getClass().getResource("/assets/image"+ tile +".jpg"));
 			    	 }
 			    	 matrix[row][col].setBorder(null);
 			    	 matrix[row][col].setIcon(new ImageIcon(image));

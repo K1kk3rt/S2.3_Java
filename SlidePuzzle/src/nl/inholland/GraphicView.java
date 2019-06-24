@@ -14,9 +14,7 @@ public class GraphicView extends JFrame{
 	
 	private GameModel game;
 	private PanelView panel;
-	
-	private final int BUTTONSIZE = 100;
-	
+		
 	private JPanel topBar;
 	private JButton button1;
 	private JButton button2;
