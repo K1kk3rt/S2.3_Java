@@ -3,6 +3,8 @@ package nl.inholland;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,13 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class GraphicView extends JFrame{
+public class GraphicView extends JFrame implements Observer{
 	
 	private GameModel game;
 	private PanelView panel;
 		
 	private JPanel topBar;
-	private JButton button1;
+	private JButton resetButton;
 	private JButton button2;
 	private JPanel bottomBar;
 	private JPanel bottomBarLeft;
@@ -32,6 +34,11 @@ public class GraphicView extends JFrame{
 		createWindow();
 		createTopBar();
 		createBottomBar();
+		
+		//update labels at launch
+		updateLabels();
+		
+		game.addObserver(this);
 	}
 	
 	private void createWindow() {
@@ -63,15 +70,15 @@ public class GraphicView extends JFrame{
 	private void createTopBar() {
 		topBar = new JPanel();
 		
-		button1 = new JButton();
+		resetButton = new JButton();
 		button2 = new JButton();
 		
 		//set button tekst
-		button1.setText("button1");
+		resetButton.setText("reset");
 		button2.setText("button2");
 		
 		//add buttons to top bar
-		topBar.add(button1);
+		topBar.add(resetButton);
 		topBar.add(button2);
 		
 		//add top bar to main window
@@ -122,6 +129,17 @@ public class GraphicView extends JFrame{
 			System.exit(0);
     			    	
 		}
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		updateLabels();
+	}
+	
+	private void updateLabels() {
+		//update labels
+		label1.setText("correct Tiles: " + game.getCorrectTiles());
+		label2.setText("Slides: " + game.getSlides());
 	}
 	
 

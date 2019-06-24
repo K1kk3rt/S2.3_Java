@@ -48,7 +48,7 @@ public class PanelView extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		loadImages();
 		
-		if(game.checkGameWon()) {
+		if(game.getGameWon()) {
 			view.showDialogWon();
 		}
 		

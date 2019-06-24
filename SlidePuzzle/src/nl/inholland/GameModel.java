@@ -9,6 +9,9 @@ public class GameModel extends Observable{
 	private final int MATRIX = 4;
 	public int[][] matrix;
 	private boolean gameStarted;
+	private boolean gameWon;
+	private int correctTiles;
+	private int slides;
 	
 
 	//construct
@@ -20,6 +23,13 @@ public class GameModel extends Observable{
 
 		//set game started
 		gameStarted = false;
+		
+		//set game won
+		gameWon = false;
+		
+		//set correct Tiles to 0, set slides to 0
+		correctTiles = 0;
+		slides = 0;
 		
 		//prepare game
 		initGame();
@@ -41,7 +51,15 @@ public class GameModel extends Observable{
 	public int[][] getMatrix() {
 		return matrix;
 	}
-	
+	public boolean getGameWon() {
+		return gameWon;
+	}
+	public int getCorrectTiles() {
+		return correctTiles;
+	}
+	public int getSlides() {
+		return slides;
+	}
 	
 	//setters
 	public void setMatrix(int[][] matrix) {
@@ -93,14 +111,16 @@ public class GameModel extends Observable{
 			}
 			i++;
 		}
+		
+		//count correct tiles
+		checkCorrectTiles();
 	}
 	
-	public boolean checkGameWon() {
+	public void checkCorrectTiles() {
 		int i = 1;
 		int counter = 1;
-		boolean won = false;
 		
-		//count if tiles are in the right order
+		//count if tiles are in the right position
 		for (int row = 0; row<MATRIX; row++){
 		     for (int col = 0; col<MATRIX; col++){ 
 		    	 if(matrix[row][col] == i) {
@@ -111,10 +131,11 @@ public class GameModel extends Observable{
 		     }
 		}
 		
-		if (counter == 16) {
-			won = true;
+		if (counter == 15) {
+			gameWon = true;
 		}
-		return won;
+		
+		correctTiles = counter;
 	}
 	
 	public void restartGame() {
@@ -132,6 +153,7 @@ public class GameModel extends Observable{
 	}
 	
 	public void moveTile(int row, int col) {
+		
 		//get empty tile location
 		int[] emptyTiles = findEmptyTile();
 		int emptyRow = emptyTiles[0];
@@ -192,6 +214,9 @@ public class GameModel extends Observable{
 		}
 		
 		if (gameStarted) {
+			//add 1 to slides
+			slides++;
+			
 			setChanged();
 			notifyObservers();
 		}
@@ -213,6 +238,9 @@ public class GameModel extends Observable{
 			}
 			
 			if (gameStarted) {
+				//add 1 to slides
+				slides++;
+				
 				setChanged();
 				notifyObservers();
 			}
@@ -231,6 +259,9 @@ public class GameModel extends Observable{
 			matrix[emptyRow][emptyCol-1] = 0;
 		}
 		if (gameStarted) {
+			//add 1 to slides
+			slides++;
+			
 			setChanged();
 			notifyObservers();
 		}
@@ -250,6 +281,9 @@ public class GameModel extends Observable{
 		}
 		
 		if (gameStarted) {
+			//add 1 to slides
+			slides++;
+			
 			setChanged();
 			notifyObservers();
 		}

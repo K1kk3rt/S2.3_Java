@@ -25,7 +25,7 @@ public class ConsoleView implements Observer{
 	
 	private void updateView() {
 		
-		if(!game.checkGameWon()) {
+		if(!game.getGameWon()) {
 			printGame();
 			getInput();			
 		}

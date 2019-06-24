@@ -23,6 +23,7 @@ public class ActionListenerController implements ActionListener{
 		     for (int col = 0; col<game.getMATRIX(); col++){
 		    	 if (panel.getMatrix()[row][col] == e.getSource()){
 		    		 game.moveTile(row, col);
+		    		 game.checkCorrectTiles();
 		    	 }
 			       
 		     }
